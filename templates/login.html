@@ -2,12 +2,13 @@
 
 <% block title %>Login &middot; Stitch<% endblock %>
 
-
 <% block class %>lcb-login animated fadeIn<% endblock %>
 
 <% block attributes %>
 
+
     style="background-image: url('./media/img/photos/blue_background.jpg');"
+
 
 <% endblock %>
 
@@ -18,7 +19,9 @@
 <% block body %>
     <section class="lcb-login-main">
 
+
         <h1 class="lcb-login-logo">Stitch</h1>
+
 
         <div class="lcb-login-boxes">
             <form class="lcb-login-box lcb-login-box-login validate" action="./account/login" method="post" data-refresh="true">
@@ -54,16 +57,25 @@
                         <input class="required email form-control" name="email" type="text" placeholder="Email" />
                     </div>
                     <div class="form-group">
-                        <input class="required form-control" name="password" type="password" placeholder="Password" minlength="8" maxlength="64" autocomplete="off" />
-                    </div>
-                    <div class="form-group">
                         <input class="required form-control" name="display-name" type="text" placeholder="Display Name" maxlength="24" />
                     </div>
-                    <div class="form-group">
-                        <input class="required form-control" name="first-name" type="text" placeholder="First Name" maxlength="24" />
+                    <div class="row">
+                        <div class="form-group col-sm-9">
+                            <input class="required form-control" name="first-name" type="text" placeholder="First Name" maxlength="24" />
+                        </div>
+                        <div class="form-group col-sm-9">
+                            <input class="required form-control" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <input class="required form-control" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
+                    <div class="row">
+                        <div class="form-group col-sm-9">
+                            <input class="required form-control" name="password" type="password"
+                                placeholder="Password" minlength="8" maxlength="64" autocomplete="off" />
+                        </div>
+                        <div class="form-group col-sm-9">
+                            <input class="required form-control" name="password-confirm" type="password"
+                                placeholder="Confirm Password" minlength="8" maxlength="64" autocomplete="off" />
+                        </div>
                     </div>
                     <div class="lcb-login-box-bottom">
                         <div class="links pull-left">
@@ -73,8 +85,6 @@
                     </div>
                 </form>
             <% endif %>
-            <footer class="lcb-login-footer">
-            </footer>
         </div>
     </section>
 <% endblock %>
