@@ -222,7 +222,7 @@ module.exports = function() {
 
             var fields = req.body || req.data;
 
-            // Sanity check the password
+        // Sanity check the password
             var passwordConfirm = fields.passwordConfirm || fields.passwordconfirm || fields['password-confirm'];
 
             if (fields.password !== passwordConfirm) {
