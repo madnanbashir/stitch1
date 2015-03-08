@@ -1,7 +1,7 @@
 {
-    "name": "Let's Chat",
-    "description": "Self-hosted chat app for small teams",
-    "repository": "https://github.com/sdelements/lets-chat",
+    "name": "Stitch",
+    "description": "HIPAA Compliant Team Communication for Doctors",
+    "repository": "https://github.com/bkkilaru/stitch.git",
     "logo": "http://i.imgur.com/eXTLHNN.png",
     "keywords": [
         "lets",
