@@ -79,6 +79,11 @@ var UserSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    position: {
+        type: String,
+        required: true,
+        trim: true
+    },
     joined: {
         type: Date,
         default: Date.now
@@ -259,6 +264,7 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
+        position: this.position,
         avatar: this.avatar
     };
 });
