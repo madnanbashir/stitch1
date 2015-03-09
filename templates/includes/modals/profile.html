@@ -25,6 +25,23 @@
                             <input class="form-control" name="last-name" type="text" value="<$ account.lastname $>" required data-model="lastName" />
                         </div>
                     </div>
+<!--                     Upload profile picture
+ --><!--                     <div class="form-group">
+                        <label class="control-label col-sm-6">Upload Profile Picture</label>
+                        <div class="col-sm-11">
+                            <form id="uploadForm"
+                                  enctype="multipart/form-data"
+                                  action="/api/photos"
+                                  method="post">
+                              <input type="file" id="userPhotoInput" name="userPhoto" />
+                            </form>
+                            <span id="status" />
+                            <img id="uploadedImage" />
+                            <script src="javascripts/jquery.min.js"></script>                            
+                            <script src="javascripts/jquery.form.js"></script>
+                            <script src="javascripts/upload.js"></script>
+                        </div>
+                    </div> -->
                     <p class="alert response" style="display: none;"></p>
                 </div>
                 <div class="modal-footer">
