@@ -411,6 +411,7 @@
             var $messages = this.$('.lcb-message[data-owner="' + user.id + '"]');
             $messages.find('.lcb-message-username').text('@' + user.get('username'));
             $messages.find('.lcb-message-displayname').text(user.get('displayName'));
+            $messages.find('.lcb-message-position').text(user.get('position'));
         }
     });
 

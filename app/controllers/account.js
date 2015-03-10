@@ -90,7 +90,8 @@ module.exports = function() {
                 data = {
                     displayName: form.displayName || form['display-name'],
                     firstName: form.firstName || form['first-name'],
-                    lastName: form.lastName || form['last-name']
+                    lastName: form.lastName || form['last-name'],
+                    position: form.position || form['position']
                 };
 
             core.account.update(req.user._id, data, function (err, user) {
@@ -239,7 +240,8 @@ module.exports = function() {
                 password: fields.password,
                 firstName: fields.firstName || fields.firstname || fields['first-name'],
                 lastName: fields.lastName || fields.lastname || fields['last-name'],
-                displayName: fields.displayName || fields.displayname || fields['display-name']
+                displayName: fields.displayName || fields.displayname || fields['display-name'],
+                position: fields.position || fields.position || fields['position']
             };
 
             core.account.create('local', data, function(err, user) {
