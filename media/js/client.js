@@ -69,7 +69,7 @@
         this.socket.emit('rooms:create', room, function(room) {
             if (room && room.errors) {
                 swal("Unable to create room",
-                     "Room slugs can only contain lower case letters, numbers or underscores!",
+                     "Room names can only contain lower case letters, numbers or underscores, and must be unique.",
                      "error");
             } else if (room && room.id) {
                 that.addRoom(room);
