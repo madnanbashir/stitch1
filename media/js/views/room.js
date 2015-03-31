@@ -284,7 +284,7 @@
             swal({
                 title: 'Do you really want to archive "' +
                        this.model.get('name') + '"?',
-                text: "You will not be able to open it!",
+                text: "You will not be able to access it after.",
                 type: "error",
                 confirmButtonText: "Yes, I'm sure",
                 allowOutsideClick: true,
