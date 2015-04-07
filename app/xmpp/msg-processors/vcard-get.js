@@ -2,8 +2,7 @@
 
 var mongoose = require('mongoose'),
     MessageProcessor = require('./../msg-processor'),
-    settings = require('./../../config'),
-    helper = require('./../helper');
+    settings = require('./../../config');
 
 module.exports = MessageProcessor.extend({
 
@@ -12,7 +11,11 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
+<<<<<<< HEAD
         var jid = helper.getUserJid(this.connection.user.username);
+=======
+        var jid = this.connection.jid();
+>>>>>>> 2de6673cb66cec396ce2c39b98f14d7879b59227
         var other = this.to && this.to !== jid;
 
         if (!other) {
@@ -43,6 +46,10 @@ module.exports = MessageProcessor.extend({
 
         vcard.c('FN').t(user.firstName + ' ' + user.lastName);
 
+<<<<<<< HEAD
+=======
+            v.c('JABBERID').t(this.connection.getUserJid(user.username));
+>>>>>>> 2de6673cb66cec396ce2c39b98f14d7879b59227
 
         var name = vcard.c('N');
         name.c('GIVEN').t(user.firstName);
