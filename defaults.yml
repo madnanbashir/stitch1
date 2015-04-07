@@ -17,8 +17,8 @@ https:
   cert: certificate.pem
 
 xmpp:
-  enable: true
-  roomCreation: true
+  enable: false
+  roomCreation: false
   debug:
     handled: false
     unhandled: false
