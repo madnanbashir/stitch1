@@ -64,7 +64,26 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function(){
+                if (xmlhttp.readyState == 4 && xmlhttp.status ==200){
+                    var myArr = JSON.parse(xmlhttp.responseText);
+                }
+            }
+            xmlhttp.open("GET", "https://api-demo.akidolabs.com/patients", true);
+            xmlhttp.send();
             var options = {
+                    currentUser: myArr.patients[0].fname,
+                    user: req.param('user'),
+                    since_id: req.param('since_id'),
+                    from: req.param('from'),
+                    to: req.param('to'),
+                    reverse: req.param('reverse'),
+                    skip: req.param('skip'),
+                    take: req.param('take'),
+                    expand: req.param('expand')
+            };
+            /*var options = {
                     currentUser: req.user._id,
                     user: req.param('user'),
                     since_id: req.param('since_id'),
@@ -75,7 +94,8 @@ module.exports = function() {
                     take: req.param('take'),
                     expand: req.param('expand')
                 };
-
+            */
+            var optionsOuter = xmlhttp.open("GET", "https://api-demo.akidolabs.com/patients", false)
             core.usermessages.list(options, function(err, messages) {
                 if (err) {
                     return res.sendStatus(400);
