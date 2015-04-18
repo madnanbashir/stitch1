@@ -64,7 +64,7 @@ module.exports = function() {
             });
         },
         list: function(req, res) {
-            /*xmlhttp = new XMLHttpRequest();
+/*            xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function(){
                 if (xmlhttp.readyState == 4 && xmlhttp.status ==200){
                     var myArr = JSON.parse(xmlhttp.responseText);
@@ -94,7 +94,6 @@ module.exports = function() {
                     take: req.param('take'),
                     expand: req.param('expand')
                 };
-            var optionsOuter = xmlhttp.open("GET", "https://api-demo.akidolabs.com/patients", false)
             core.usermessages.list(options, function(err, messages) {
                 if (err) {
                     return res.sendStatus(400);
