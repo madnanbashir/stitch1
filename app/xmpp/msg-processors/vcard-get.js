@@ -12,10 +12,14 @@ module.exports = MessageProcessor.extend({
 
     then: function(cb) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         var jid = helper.getUserJid(this.connection.user.username);
 =======
         var jid = this.connection.jid();
 >>>>>>> 2de6673cb66cec396ce2c39b98f14d7879b59227
+=======
+        var jid = this.connection.jid();
+>>>>>>> b0830e2fb985c54b644199ba6f5959711b3bb521
         var other = this.to && this.to !== jid;
 
         if (!other) {
@@ -47,9 +51,12 @@ module.exports = MessageProcessor.extend({
         vcard.c('FN').t(user.firstName + ' ' + user.lastName);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             v.c('JABBERID').t(this.connection.getUserJid(user.username));
 >>>>>>> 2de6673cb66cec396ce2c39b98f14d7879b59227
+=======
+>>>>>>> b0830e2fb985c54b644199ba6f5959711b3bb521
 
         var name = vcard.c('N');
         name.c('GIVEN').t(user.firstName);
@@ -57,7 +64,7 @@ module.exports = MessageProcessor.extend({
 
         vcard.c('NICKNAME').t(user.username);
 
-        vcard.c('JABBERID').t(helper.getUserJid(user.username));
+        vcard.c('JABBERID').t(this.connection.getUserJid(user.username));
 
         var userId = (user.id || user._id).toString();
 

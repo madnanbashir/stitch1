@@ -5,7 +5,8 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    ObjectId = mongoose.Schema.Types.ObjectId;
+    ObjectId = mongoose.Schema.Types.ObjectId,
+    settings = require('./../config');
 
 var MessageSchema = new mongoose.Schema({
     users: [{
@@ -24,10 +25,17 @@ var MessageSchema = new mongoose.Schema({
     },
     posted: {
         type: Date,
-        default: Date.now,
-        index: true
+        default: Date.now
     }
 });
+
+if (settings.private.expire !== false) {
+    var defaultExpire = 6 * 60; // 6 hours
+
+    MessageSchema.index({ posted: 1 }, {
+        expireAfterSeconds: (settings.private.expire || defaultExpire) * 60
+    });
+}
 
 MessageSchema.index({ users: 1, posted: -1, _id: 1 });
 
