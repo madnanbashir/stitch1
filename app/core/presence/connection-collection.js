@@ -25,42 +25,35 @@ ConnectionCollection.prototype.contains = function(connection) {
     if (!connection) {
         return false;
     }
-    
+
     return !!this.connections[connection.id];
 };
 
-ConnectionCollection.prototype.getUsers = function(filter) {
-    var connections = this.connections;
 
-    if (filter) {
-        connections = this.query(filter);
-    }
-
-    var users = _.chain(connections)
-                .filter(function(value, key) {
-                    return !!value.user;
-                })
-                .map(function(value, key) {
-                    return value.user;
-                })
-                .uniq('id')
-                .value();
-
-    return users;
+ConnectionCollection.prototype.getUsers = function() {
+    return _.chain(this.connections)
+        .filter(function(value) {
+            // User shouldn't be undefined - but sometimes it happens :/
+            return value.user;
+        })
+        .map(function(value) {
+            return value.user;
+        })
+        .uniq('id')
+        .value();
 };
 
-ConnectionCollection.prototype.getUserIds = function(filter) {
-    var users = this.getUsers(filter);
+ConnectionCollection.prototype.getUserIds = function() {
+    return _.map(this.getUsers(), function(user) {
 
-    return _.map(users, function(user) {
         return user.id;
     });
 };
 
-ConnectionCollection.prototype.getUsernames = function(filter) {
-    var users = this.getUsers(filter);
 
-    return _.map(users, function(user) {
+ConnectionCollection.prototype.getUsernames = function() {
+    return _.map(this.getUsers(), function(user) {
+
         return user.username;
     });
 };
@@ -77,12 +70,12 @@ ConnectionCollection.prototype.query = function(options) {
 
         if (options.user) {
             var u = options.user;
-            if (conn.user.id !== u && conn.user.username !== u) {
+            if (conn.user && conn.user.id !== u && conn.user.username !== u) {
                 result = false;
             }
         }
 
-        if (options.userId && conn.user.id !== options.userId) {
+        if (options.userId && conn.user && conn.user.id !== options.userId) {
             result = false;
         }
 
@@ -91,15 +84,6 @@ ConnectionCollection.prototype.query = function(options) {
         }
 
         return result;
-
-    });
-};
-
-ConnectionCollection.prototype.byType = function(type) {
-    return _.map(this.connections, function(value, key) {
-        return value;
-    }).filter(function(conn) {
-        return conn.type === type;
     });
 };
 
