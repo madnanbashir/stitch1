@@ -23,10 +23,10 @@ Features
 
 ## Running Locally
 
-1) `npm install`
-2) Make sure you have a running instance of MongoDB (run `mongod` in a separate terminal)
-3) `npm start`
-4) Visit `localhost:5000`
+1. `npm install`
+2. Make sure you have a running instance of MongoDB (run `mongod` in a separate terminal)
+3. `npm start`
+4. Visit `localhost:5000`
 
 
 ## License
