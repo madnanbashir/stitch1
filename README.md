@@ -1,3 +1,5 @@
+## About
+
 Stitch is a central hub for real-time, medical team communication. HIPAA-compliant, cross-platform, searchable by patient ID, and integrate with existing electronic health records (EHRs).
 
 Features
@@ -18,6 +20,14 @@ Features
 * Local / [Kerberos][kerberos] / [LDAP][ldap] authentication
 * [Hubot Adapter][hubot]
 * REST-like API
+
+## Running Locally
+
+1) `npm install`
+2) Make sure you have a running instance of MongoDB (run `mongod` in a separate terminal)
+3) `npm start`
+4) Visit `localhost:5000`
+
 
 ## License
 
