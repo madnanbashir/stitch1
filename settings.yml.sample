@@ -1,5 +1,5 @@
 #
-# Let's Chat Settings
+# Stitch Settings
 #
 # See defaults.yml for all available options
 #
@@ -29,7 +29,7 @@ xmpp:
   domain: example.com
 
 database:
-  uri: mongodb://localhost/letschat
+  uri: mongodb://localhost/stitch
 
 secrets:
   cookie: secretsauce

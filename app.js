@@ -1,10 +1,10 @@
 //
-// Let's Chat
+// Stitch
 //
 
 'use strict';
 
-process.title = "letschat";
+process.title = "stitch";
 
 var _ = require('lodash'),
     fs = require('fs'),

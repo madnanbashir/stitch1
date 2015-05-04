@@ -1,5 +1,5 @@
 #
-# Let's Chat Built-in Defaults
+# Stitch Built-in Defaults
 #
 
 env: development # development / production
@@ -31,7 +31,7 @@ xmpp:
     cert: ./server.crt
 
 database:
-  uri: mongodb://localhost/letschat
+  uri: mongodb://localhost/stitch
 
 secrets:
   cookie: secretsauce

@@ -5,5 +5,5 @@ RUN mkdir -p /app
 ADD . /app
 RUN /build/builder
 
-ENV LCB_DATABASE_URI mongodb://db/letschat
+ENV LCB_DATABASE_URI mongodb://db/stitch
 EXPOSE 5000

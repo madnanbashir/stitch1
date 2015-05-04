@@ -1,4 +1,4 @@
-# Lets Chat Vagrant file
+# Vagrant file
 
 # Set LCB_BRANCH to pick what git checkout to use when spinning up the
 # application. For example:

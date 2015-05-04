@@ -1,9 +1,9 @@
-# Let's Chat: Fig Integration
+# Stitch: Fig Integration
 # http://fig.sh
 #
 # Usage: fig up
 
-# Let's Chat application
+# Stitch application
 app:
   build: .
   links:
