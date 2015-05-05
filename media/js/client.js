@@ -298,6 +298,14 @@
             room: id
         }, callback);
     };
+
+    Client.prototype.inviteToRoom = function(username, room) {
+        this.socket.emit('rooms:invite', {
+            room: room,
+            username: username
+        });
+    };
+
     //
     // Messages
     //
@@ -525,6 +533,14 @@
         });
         this.socket.on('rooms:archive', function(room) {
             that.roomArchive(room);
+        });
+        this.socket.on('rooms:invite', function (data) {
+            var currentUser = that.user.get('username');
+
+            // If invite request is for me...
+            if (data.username.endsWith(currentUser)) {
+                that.joinRoom(data.room);
+            }
         });
         this.socket.on('users:join', function(user) {
             that.addUser(user);

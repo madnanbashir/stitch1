@@ -21,7 +21,8 @@
             'click .submit-edit-room': 'submitEditRoom',
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
-            'click .lcb-upload-trigger': 'upload'
+            'click .lcb-upload-trigger': 'upload',
+            'inserted.atwho .lcb-entry-input': 'sendInvite'
         },
         initialize: function(options) {
             this.client = options.client;
@@ -412,6 +413,12 @@
             $messages.find('.lcb-message-username').text('@' + user.get('username'));
             $messages.find('.lcb-message-displayname').text(user.get('displayName'));
             $messages.find('.lcb-message-position').text(user.get('position'));
+        },
+        sendInvite: function (e, $li) {
+            var username = $li.data('value'),
+                roomId = this.model.get('id');
+
+            this.client.inviteToRoom(username, roomId);
         }
     });
 
