@@ -223,7 +223,7 @@ module.exports = function() {
 
             var fields = req.body || req.data;
 
-        // Sanity check the password
+            // Sanity check the password
             var passwordConfirm = fields.passwordConfirm || fields.passwordconfirm || fields['password-confirm'];
 
             if (fields.password !== passwordConfirm) {
@@ -240,7 +240,7 @@ module.exports = function() {
                 password: fields.password,
                 firstName: fields.firstName || fields.firstname || fields['first-name'],
                 lastName: fields.lastName || fields.lastname || fields['last-name'],
-                displayName: fields.displayName || fields.displayname || fields['display-name'],
+                displayName: fields.displayName || fields.displayname || fields['display-name']
                 position: fields.position || fields.position || fields['position']
             };
 

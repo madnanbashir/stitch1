@@ -72,7 +72,7 @@
         search: _.throttle(function() {
             this.query = this.$query.val()
             this.loadTranscript();
-        }, 400, {leading: false}),
+        }, 400),
         loadTranscript: function() {
             var that = this;
             this.clearMessages();

@@ -1,4 +1,4 @@
-# Vagrant file
+# Stitch Vagrant file
 
 # Set LCB_BRANCH to pick what git checkout to use when spinning up the
 # application. For example:
@@ -8,7 +8,7 @@
 LCB_BRANCH = ENV['LCB_BRANCH'] || 'master'
 
 
-# Script that we run to bootstrap the system to run Let's Chat
+# Script that we run to bootstrap the system to run Stitch
 LCB_SCRIPT = <<EOF
 sudo apt-get update
 sudo apt-get install -y python-software-properties

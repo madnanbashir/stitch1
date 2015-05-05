@@ -1,14 +1,10 @@
 'use strict';
 
 var EventEmitter = require('events').EventEmitter,
-    crypto = require('crypto'),
-    http = require('http'),
     util = require('util'),
     _ = require('lodash');
 
-function UserCollection(options) {
-    EventEmitter.call(this);
-    this.core = options.core;
+function UserCollection() {
     this.users = {};
 
     this.get = this.get.bind(this);
@@ -16,25 +12,16 @@ function UserCollection(options) {
     this.remove = this.remove.bind(this);
 }
 
-util.inherits(UserCollection, EventEmitter);
-
 UserCollection.prototype.get = function(userId) {
     return this.users[userId];
 };
 
-UserCollection.prototype.getByUsername = function(username) {
-    return _.find(this.users, function(user) {
-        return user.username === username;
-    });
-};
-
 UserCollection.prototype.getOrAdd = function(user) {
-    var user2 = typeof user.toJSON === 'function' ? user.toJSON() : user;
-    var userId = user2.id.toString();
+    user = typeof user.toJSON === 'function' ? user.toJSON() : user;
+    var userId = user.id.toString();
     if (!this.users[userId]) {
-        _.assign(user2, { id: userId });
-        this.users[userId] = user2;
-        this.core.avatars.add(user);
+        _.assign(user, { id: userId });
+        this.users[userId] = user;
     }
     return this.users[userId];
 };

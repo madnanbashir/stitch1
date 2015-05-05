@@ -11,71 +11,42 @@ module.exports = MessageProcessor.extend({
     },
 
     then: function(cb) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        var jid = helper.getUserJid(this.connection.user.username);
-=======
         var jid = this.connection.jid();
->>>>>>> 2de6673cb66cec396ce2c39b98f14d7879b59227
-=======
-        var jid = this.connection.jid();
->>>>>>> b0830e2fb985c54b644199ba6f5959711b3bb521
         var other = this.to && this.to !== jid;
 
-        if (!other) {
-            return this.sendVcard(this.connection.user, cb);
-        }
+        var sendVcard = function (user) {
+            var stanza = this.Iq();
 
-        var username = this.to.split('@')[0];
-        var user = this.core.presence.users.getByUsername(username);
+            var v = stanza.c('vCard', {
+             xmlns: 'vcard-temp'
+            });
 
-        if (user) {
-            return this.sendVcard(user, cb);
-        }
+            v.c('FN').t(user.firstName + ' ' + user.lastName);
 
-        var User = mongoose.model('User');
-        User.findByIdentifier(username, function(err, user) {
-            if (user) {
-                this.sendVcard(user, cb);
-            }
-        });
-    },
 
-    sendVcard: function(user, cb) {
-        var stanza = this.Iq();
+            var name = v.c('N');
+            name.c('GIVEN').t(user.firstName);
+            name.c('FAMILY').t(user.lastName);
 
-        var vcard = stanza.c('vCard', {
-            xmlns: 'vcard-temp'
-        });
+            v.c('NICKNAME').t(user.username);
 
-        vcard.c('FN').t(user.firstName + ' ' + user.lastName);
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
             v.c('JABBERID').t(this.connection.getUserJid(user.username));
->>>>>>> 2de6673cb66cec396ce2c39b98f14d7879b59227
-=======
->>>>>>> b0830e2fb985c54b644199ba6f5959711b3bb521
 
-        var name = vcard.c('N');
-        name.c('GIVEN').t(user.firstName);
-        name.c('FAMILY').t(user.lastName);
+            cb(null, stanza);
 
-        vcard.c('NICKNAME').t(user.username);
+        }.bind(this);
 
-        vcard.c('JABBERID').t(this.connection.getUserJid(user.username));
-
-        var userId = (user.id || user._id).toString();
-
-        var avatar = this.core.avatars.get(userId);
-        if (avatar) {
-            var photo = vcard.c('PHOTO');
-            photo.c('TYPE').t('image/jpeg');
-            photo.c('BINVAL').t(avatar.base64);
+        if (other) {
+            var User = mongoose.model('User');
+            var username = this.to.split('@')[0];
+            User.findByIdentifier(username, function(err, user) {
+                if (user) {
+                    sendVcard(user);
+                }
+            });
+        } else {
+            sendVcard(this.client.user);
         }
-
-        cb(null, stanza);
     }
 
 });

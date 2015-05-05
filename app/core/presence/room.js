@@ -5,23 +5,10 @@ var EventEmitter = require('events').EventEmitter,
     _ = require('lodash'),
     ConnectionCollection = require('./connection-collection');
 
-function Room(options) {
+function Room(roomId, roomSlug) {
     EventEmitter.call(this);
-
-    if (options.system) {
-        // This is the system room
-        // Used for tracking what users are online
-        this.system = true;
-        this.roomId = undefined;
-        this.roomSlug = undefined;
-    	this.hasPassword = false;
-    } else {
-        this.system = false;
-        this.roomId = options.room._id.toString();
-        this.roomSlug = options.room.slug;
-    	this.hasPassword = options.room.hasPassword;
-    }
-
+    this.roomId = roomId;
+    this.roomSlug = roomSlug;
     this.connections = new ConnectionCollection();
     this.userCount = 0;
 
@@ -38,15 +25,15 @@ function Room(options) {
 
 util.inherits(Room, EventEmitter);
 
-Room.prototype.getUsers = function(filter) {
+Room.prototype.getUsers = function() {
     return this.connections.getUsers();
 };
 
-Room.prototype.getUserIds = function(filter) {
+Room.prototype.getUserIds = function() {
     return this.connections.getUserIds();
 };
 
-Room.prototype.getUsernames = function(filter) {
+Room.prototype.getUsernames = function() {
     return this.connections.getUsernames();
 };
 
@@ -56,41 +43,22 @@ Room.prototype.containsUser = function(userId) {
 
 Room.prototype.emitUserJoin = function(data) {
     this.userCount++;
-
-    var d = {
+    this.emit('user_join', {
+        roomId: this.roomId,
+        roomSlug: this.roomSlug,
         userId: data.userId,
         username: data.username
-    };
-
-    if (this.system) {
-        d.system = true;
-    } else {
-        d.roomId = this.roomId;
-        d.roomSlug = this.roomSlug;
-        d.roomHasPassword = this.hasPassword;
-    }
-
-    this.emit('user_join', d);
+    });
 };
 
 Room.prototype.emitUserLeave = function(data) {
     this.userCount--;
-
-    var d = {
-        user: data.user,
+    this.emit('user_leave', {
+        roomId: this.roomId,
+        roomSlug: this.roomSlug,
         userId: data.userId,
         username: data.username
-    };
-
-    if (this.system) {
-        d.system = true;
-    } else {
-        d.roomId = this.roomId;
-        d.roomSlug = this.roomSlug;
-        d.roomHasPassword = this.hasPassword;
-    }
-
-    this.emit('user_leave', d);
+    });
 };
 
 Room.prototype.usernameChanged = function(data) {
@@ -118,7 +86,6 @@ Room.prototype.addConnection = function(connection) {
         !this.containsUser(connection.user.id)) {
         // User joining room
         this.emitUserJoin({
-            user: connection.user,
             userId: connection.user.id,
             username: connection.user.username
         });
@@ -137,7 +104,6 @@ Room.prototype.removeConnection = function(connection) {
             !this.containsUser(connection.user.id)) {
             // Leaving room altogether
             this.emitUserLeave({
-                user: connection.user,
                 userId: connection.user.id,
                 username: connection.user.username
             });

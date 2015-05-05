@@ -4,13 +4,10 @@ var EventEmitter = require('events').EventEmitter,
     util = require('util'),
     _ = require('lodash'),
     AccountManager = require('./account'),
-    AvatarCache = require('./avatar-cache'),
     FileManager = require('./files'),
     MessageManager = require('./messages'),
     PresenceManager = require('./presence'),
-    RoomManager = require('./rooms'),
-    UserManager = require('./users'),
-    UserMessageManager = require('./usermessages');
+    RoomManager = require('./rooms');
 
 function Core() {
     EventEmitter.call(this);
@@ -32,18 +29,6 @@ function Core() {
     });
 
     this.rooms = new RoomManager({
-        core: this
-    });
-
-    this.users = new UserManager({
-        core: this
-    });
-
-    this.usermessages = new UserMessageManager({
-        core: this
-    });
-
-    this.avatars = new AvatarCache({
         core: this
     });
 

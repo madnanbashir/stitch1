@@ -10,7 +10,6 @@ function ConnectionCollection() {
     this.get = this.get.bind(this);
     this.getUsers = this.getUsers.bind(this);
     this.getUserIds = this.getUserIds.bind(this);
-    this.getUsernames = this.getUsernames.bind(this);
 
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
@@ -29,7 +28,6 @@ ConnectionCollection.prototype.contains = function(connection) {
     return !!this.connections[connection.id];
 };
 
-
 ConnectionCollection.prototype.getUsers = function() {
     return _.chain(this.connections)
         .filter(function(value) {
@@ -45,15 +43,12 @@ ConnectionCollection.prototype.getUsers = function() {
 
 ConnectionCollection.prototype.getUserIds = function() {
     return _.map(this.getUsers(), function(user) {
-
         return user.id;
     });
 };
 
-
 ConnectionCollection.prototype.getUsernames = function() {
     return _.map(this.getUsers(), function(user) {
-
         return user.username;
     });
 };
