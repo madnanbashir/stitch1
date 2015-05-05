@@ -26,13 +26,6 @@
         },
         initialize: function(options) {
             this.client = options.client;
-
-            var iAmOwner = this.model.get('owner') === this.client.user.id;
-            var iCanEdit = iAmOwner || !this.model.get('hasPassword');
-
-            this.model.set('iAmOwner', iAmOwner);
-            this.model.set('iCanEdit', iCanEdit);
-
             this.template = options.template;
             this.messageTemplate =
                 Handlebars.compile($('#template-message').html());
@@ -84,16 +77,10 @@
             }
         },
         getAtwhoUserFilter: function(collection) {
-            var currentUser = this.client.user;
-
             return function filter(query, data, searchKey) {
                 var q = query.toLowerCase();
                 var results = collection.filter(function(user) {
                     var attr = user.attributes;
-
-                    if (user.id === currentUser.id) {
-                        return false;
-                    }
 
                     if (!attr.safeName) {
                         attr.safeName = attr.displayName.replace(/\W/g, '');
@@ -227,19 +214,7 @@
             if (e) {
                 e.preventDefault();
             }
-
-            var $modal = this.$('.lcb-room-edit'),
-                $name = $modal.find('input[name="name"]'),
-                $description = $modal.find('textarea[name="description"]'),
-                $password = $modal.find('input[name="password"]'),
-                $confirmPassword = $modal.find('input[name="confirmPassword"]');
-
-            $name.val(this.model.get('name'));
-            $description.val(this.model.get('description'));
-            $password.val('');
-            $confirmPassword.val('');
-
-            $modal.modal();
+            this.$('.lcb-room-edit').modal();
         },
         hideEditRoom: function(e) {
             if (e) {
@@ -251,41 +226,21 @@
             if (e) {
                 e.preventDefault();
             }
-
-            var $modal = this.$('.lcb-room-edit'),
-                $name = $modal.find('input[name="name"]'),
-                $description = $modal.find('textarea[name="description"]'),
-                $password = $modal.find('input[name="password"]'),
-                $confirmPassword = $modal.find('input[name="confirmPassword"]');
-
-            $name.parent().removeClass('has-error');
-            $confirmPassword.parent().removeClass('has-error');
-
-            if (!$name.val()) {
-                $name.parent().addClass('has-error');
-                return;
-            }
-
-            if ($password.val() && $password.val() !== $confirmPassword.val()) {
-                $confirmPassword.parent().addClass('has-error');
-                return;
-            }
-
+            var name = this.$('.edit-room input[name="name"]').val();
+            var description = this.$('.edit-room textarea[name="description"]').val();
             this.client.events.trigger('rooms:update', {
                 id: this.model.id,
-                name: $name.val(),
-                description: $description.val(),
-                password: $password.val()
+                name: name,
+                description: description
             });
-
-            $modal.modal('hide');
+            this.$('.lcb-room-edit').modal('hide');
         },
         archiveRoom: function(e) {
             var that = this;
             swal({
                 title: 'Do you really want to archive "' +
                        this.model.get('name') + '"?',
-                text: "You will not be able to access it after.",
+                text: "You will not be able to open it!",
                 type: "error",
                 confirmButtonText: "Yes, I'm sure",
                 allowOutsideClick: true,
@@ -412,7 +367,6 @@
             var $messages = this.$('.lcb-message[data-owner="' + user.id + '"]');
             $messages.find('.lcb-message-username').text('@' + user.get('username'));
             $messages.find('.lcb-message-displayname').text(user.get('displayName'));
-            $messages.find('.lcb-message-position').text(user.get('position'));
         },
         sendInvite: function (e, $li) {
             var username = $li.data('value'),
