@@ -79,7 +79,7 @@
             <ul class="lcb-tabs">
                 <li data-id="list" class="lcb-tab lcb-tab-home">
                     <a href="#!/">
-                        <i class="fa fa-th"></i><span> Patients</span>
+                        <i class="fa fa-th"></i><span>Patients</span>
                     </a>
                 </li>
             </ul>
@@ -88,7 +88,7 @@
             <div class="lcb-rooms-browser lcb-pane hide" data-id="list">
                 <header class="lcb-rooms-browser-header">
                     <h2 class="lcb-rooms-browser-heading">
-                        Patients
+                        Patient Rooms
                     </h2>
                     <div class="lcb-rooms-browser-filter">
                         <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
@@ -103,7 +103,6 @@
                 </header>
                 <ul class="lcb-rooms-list"></ul>
                 <% include 'includes/modals/add-room.html' %>
-                <% include 'includes/modals/password.html' %>
             </div>
         </section>
         <div class="lcb-loading lcb-client-loading">
@@ -115,6 +114,5 @@
         <% include 'includes/modals/xmpp.html' %>
         <% include 'includes/modals/tokens.html' %>
         <% include 'includes/modals/upload.html' %>
-        <% include 'includes/modals/giphy.html' %>
     </div><!-- lcb-client end -->
 <% endblock %>

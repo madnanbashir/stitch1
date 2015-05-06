@@ -14,33 +14,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Patient ID</label>
+                        <label for="lcb-room-slug">Patient ID</label>
                         <div class="input-group">
                             <span class="input-group-addon">#</span>
-                            <input type="text" placeholder="Patient ID"
+                            <input type="text" placeholder="Slug"
                                 class="lcb-room-slug form-control" >
                         </div>
                     </div>
-                    <!-- <div class="form-group">
-                        <label>Description</label>
+                    <!--<div class="form-group">
+                        <label for="lcb-room-name">Description</label>
                         <input type="text" placeholder="Description"
                             class="lcb-room-description form-control">
-                    </div> -->
-                    <% if settings.rooms.passwordProtected %>
-                        <div class="row">
-                            <div class="form-group col-sm-9">
-                                <label>Password</label>
-                                <input type="password"
-                                    placeholder="Empty for public room"
-                                    class="lcb-room-password form-control">
-                            </div>
-                            <div class="form-group col-sm-9">
-                                <label>Confirm Password</label>
-                                <input type="password"
-                                    class="lcb-room-confirm-password form-control">
-                            </div>
-                        </div>
-                    <% endif %>
+                    </div>-->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
