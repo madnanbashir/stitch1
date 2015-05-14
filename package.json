@@ -1,7 +1,7 @@
 {
   "name": "lets-chat",
   "version": "0.3.10",
-  "description": "A chat app for small teams.",
+  "description": "A HIPAA-compliant team communication platform for medical providers.",
   "private": false,
   "main": "app.js",
   "scripts": {
@@ -15,46 +15,33 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/sdelements/lets-chat.git"
+    "url": "git://github.com/stitchtechnologies/stitch"
   },
-  "author": {
-    "name": "Houssam Haidar",
-    "email": "houssam@sdelements.com"
-  },
-  "contributors": [
+  "Authors": [
     {
-      "name": "Simon Bartlett",
-      "email": "simon@sdelements.com"
+      "name": "Jonathan Weinstein",
+      "email": "jonathan@teamstitch.com"
     },
     {
-      "name": "Shawn Gustaw",
-      "email": "shawn@sdelements.com"
+      "name": "Bharat Kilaru",
+      "email": "bharat@teamstitch.com"
     },
     {
-      "name": "Geoff Whittington",
-      "email": "geoff@sdelements.com"
-    },
-    {
-      "name": "Hanif Virani",
-      "email": "hanif@sdelements.com"
-    },
-    {
-      "name": "Jeffery Bain",
-      "email": "jeff@sdelements.com"
-    },
-    {
-      "name": "Ramanan Sivaranjan",
-      "email": "ramanan@sdelements.com"
+      "name": "Aakriti Shroff",
+      "email": "aakriti@teamstitch.com"
     }
   ],
   "keywords": [
     "chat",
-    "group chat"
+    "group chat",
+    "HIPAA",
+    "doctor",
+    "medical"
   ],
   "bugs": {
-    "url": "https://github.com/sdelements/lets-chat/issues"
+    "url": "https://github.com/stitchtechnologies/stitch/issues"
   },
-  "homepage": "https://github.com/sdelements/lets-chat",
+  "homepage": "https://github.com/stitchtechnologies/stitch",
   "dependencies": {
     "MD5": "~1.2.1",
     "async": "^0.9.0",
