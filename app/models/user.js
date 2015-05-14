@@ -8,7 +8,9 @@ var bcrypt = require('bcryptjs'),
     crypto = require('crypto'),
     md5 = require('MD5'),
     hash = require('node_hash'),
-    settings = require('./../config');
+    settings = require('./../config'),
+    fs = require('fs'),
+    path = require('path');
 
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
@@ -92,6 +94,11 @@ var UserSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    avatarUrl: {
+        type: String,
+        //required: true,
+        trim: true
+    },
     rooms: [{
 		type: ObjectId,
 		ref: 'Room'
@@ -113,10 +120,6 @@ UserSchema.virtual('local').get(function() {
     return this.provider === 'local';
 });
 
-UserSchema.virtual('avatar').get(function() {
-    return md5(this.email);
-});
-
 UserSchema.pre('save', function(next) {
     var user = this;
     if (!user.isModified('password')) {
@@ -128,7 +131,18 @@ UserSchema.pre('save', function(next) {
             return next(err);
         }
         user.password = hash;
-        next();
+
+        fs.readdir(path.resolve(__dirname, '../../media/profile_icons'), function(err, files) {
+            if (err) {
+                console.log(err);
+                return next(err);
+            }
+
+            var randomPicIndex = Math.floor((Math.random() * files.length - 1));
+
+            user.avatarUrl = '/media/profile_icons/' + files[randomPicIndex];
+            next();
+        });
     });
 });
 
@@ -265,7 +279,7 @@ UserSchema.method('toJSON', function() {
         username: this.username,
         displayName: this.displayName,
         position: this.position,
-        avatar: this.avatar
+        avatarUrl: this.avatarUrl
     };
 });
 
