@@ -96,7 +96,7 @@ var UserSchema = new mongoose.Schema({
     },
     avatarUrl: {
         type: String,
-        //required: true,
+        required: true,
         trim: true
     },
     rooms: [{
@@ -120,6 +120,21 @@ UserSchema.virtual('local').get(function() {
     return this.provider === 'local';
 });
 
+UserSchema.pre('validate', function(next) {
+    var user = this;
+
+    fs.readdir(path.resolve(__dirname, '../../media/profile_icons'), function(err, files) {
+        if (err) {
+            return next(err);
+        }
+
+        var randomPicIndex = Math.floor((Math.random() * files.length));
+
+        user.avatarUrl = '/media/profile_icons/' + files[randomPicIndex];
+        next();
+    });
+});
+
 UserSchema.pre('save', function(next) {
     var user = this;
     if (!user.isModified('password')) {
@@ -131,18 +146,7 @@ UserSchema.pre('save', function(next) {
             return next(err);
         }
         user.password = hash;
-
-        fs.readdir(path.resolve(__dirname, '../../media/profile_icons'), function(err, files) {
-            if (err) {
-                console.log(err);
-                return next(err);
-            }
-
-            var randomPicIndex = Math.floor((Math.random() * files.length - 1));
-
-            user.avatarUrl = '/media/profile_icons/' + files[randomPicIndex];
-            next();
-        });
+        next();
     });
 });
 
