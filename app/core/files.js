@@ -50,10 +50,10 @@ FileManager.prototype.create = function(options, cb) {
             return cb(err);
         }
         if (!room) {
-            return cb('Patient does not exist.');
+            return cb('Room does not exist.');
         }
         if (room.archived) {
-            return cb('Patient is archived.');
+            return cb('Room is archived.');
         }
 
         new File({
