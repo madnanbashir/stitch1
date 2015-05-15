@@ -41,7 +41,7 @@ module.exports = function() {
         .post(fileUpload, middlewares.requireLogin, function(req, res) {
             var srcPath = req.files.userPhoto.path;
 
-            gm(srcPath).resize(600, null).write(srcPath, function(err) {
+            gm(srcPath).resize(379, null).write(srcPath, function(err) {
                 if(err){
                     return res.sendStatus(500);
                 }
