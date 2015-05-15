@@ -94,7 +94,7 @@ var UserSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    avatarUrl: {
+    defaultAvatar: {
         type: String,
         required: true,
         trim: true
@@ -130,7 +130,7 @@ UserSchema.pre('validate', function(next) {
 
         var randomPicIndex = Math.floor((Math.random() * files.length));
 
-        user.avatarUrl = '/media/profile_icons/' + files[randomPicIndex];
+        user.defaultAvatar = files[randomPicIndex];
         next();
     });
 });
@@ -282,8 +282,7 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
-        position: this.position,
-        avatarUrl: this.avatarUrl
+        position: this.position
     };
 });
 

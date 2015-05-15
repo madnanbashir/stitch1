@@ -191,8 +191,7 @@
             }
 
             var roomID = message.room.id,
-                avatarUrl = message.owner.avatarUrl,
-                icon = avatarUrl,
+                icon = '/getProfilePicture',
                 title = message.owner.displayName + ' in ' + message.room.name,
                 mention = message.mentioned;
 

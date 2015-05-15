@@ -68,6 +68,10 @@
                 el: this.$el.find('#lcb-profile'),
                 model: this.client.user
             });
+            this.profilePictureModal = new window.LCB.ProfilePictureModalView({
+                el: this.$el.find('#lcb-profile-picture'),
+                model: this.client.user
+            });
             this.accountModal = new window.LCB.AccountModalView({
                 el: this.$el.find('#lcb-account'),
                 model: this.client.user

@@ -7,6 +7,15 @@
                     <h4 class="modal-title"><i class="icon-edit"></i> Profile Settings</h4>
                 </div>
                 <div class="modal-body">
+                    <div style="width:100%; margin-bottom: 20px">
+                        <div style="width:170px; margin: 0 auto">
+                            <img id="profile-photo" style="width:100%;border-radius: 10px" src="/getProfilePicture"/>
+                            <br/>
+                            <a data-toggle="modal" href="#lcb-profile-picture">
+                                <i class="fa fa-fw fa-edit"></i> Edit Profile Picture
+                            </a>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="control-label col-sm-6">Display Name</label>
                         <div class="col-sm-11">
@@ -24,7 +33,8 @@
                         <div class="col-sm-11">
                             <input class="form-control" name="last-name" type="text" value="<$ account.lastname $>" required data-model="lastName" />
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-sm-6">Title</label>
                         <div class="col-sm-11">
                             <input class="form-control" name="position" type="text" value="<$ account.position $>" required data-model="position" />

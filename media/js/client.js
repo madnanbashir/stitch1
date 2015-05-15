@@ -30,6 +30,12 @@
             that.user.set(user);
         });
     };
+    Client.prototype.updateProfilePicture = function(profilePicture) {
+        var that = this;
+        this.socket.emit('account:profilePicture', profilePicture, function(user) {
+            that.user.set(user);
+        });
+    };
 
     //
     // Rooms
@@ -489,6 +495,7 @@
         this.events.on('rooms:switch', this.switchRoom, this);
         this.events.on('rooms:archive', this.archiveRoom, this);
         this.events.on('profile:update', this.updateProfile, this);
+        this.events.on('profilePicture:update', this.updateProfilePicture, this);
     };
     //
     // Start
