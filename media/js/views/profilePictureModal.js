@@ -20,7 +20,7 @@
             'change #photo-input': 'inputChange',
             'submit #upload-form': 'submitForm',
             'click #send-crop': 'sendCrop',
-            'click #cancel-crop': 'cancelCrop',
+            'click #cancel-crop': 'cancelCrop'
         },
         success: function() {
             swal('Profile Updated!', 'Your profile picture has been updated.',
@@ -173,7 +173,9 @@
             }
         },
         cancelCrop: function(){
-            jcrop_api.destroy();
+            if(jcrop_api) {
+                jcrop_api.destroy();
+            }
             $('#uploaded-image').removeAttr('src');
             $('#uploaded-image').hide();
 
