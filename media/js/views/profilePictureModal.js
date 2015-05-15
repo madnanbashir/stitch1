@@ -55,6 +55,9 @@
                         jcrop_api.destroy();
                     }
 
+                    $('#uploaded-image').width('');
+                    $('#uploaded-image').height('');
+
                     $('#uploaded-image').attr({'src':imgUrl});
                     $('#uploaded-image').show();
 
@@ -181,7 +184,7 @@
 
             $('#profile-photo-preview-pane').hide();
 
-            $('#uploaded-image').width('');
+            $('#uploaded-image').width('100%');
             $('#uploaded-image').height('');
             this.disablePreview();
             $('#photo-input').val('');
