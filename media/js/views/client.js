@@ -20,11 +20,11 @@
             //
             // Subviews
             //
-            this.browser = new window.LCB.BrowserView({
-                el: this.$el.find('.lcb-rooms-browser'),
-                rooms: this.client.rooms,
-                client: this.client
-            });
+            // this.browser = new window.LCB.BrowserView({
+            //     el: this.$el.find('.lcb-rooms-browser'),
+            //     rooms: this.client.rooms,
+            //     client: this.client
+            // });
             this.tabs = new window.LCB.TabsView({
                 el: this.$el.find('.lcb-tabs'),
                 rooms: this.client.rooms,
@@ -82,6 +82,16 @@
             this.notificationsModal = new window.LCB.NotificationsModalView({
                 el: this.$el.find('#lcb-notifications')
             });
+            this.findPatientsModal = new window.LCB.FindPatientsView({
+                el: this.$el.find('#lcb-find-patients'),
+                rooms: this.client.rooms,
+                client: this.client
+            });
+            this.addPatientModal = new window.LCB.AddPatientView({
+                el: this.$el.find('#lcb-add-room'),
+                client: this.client
+            });
+
             //
             // Misc
             //
