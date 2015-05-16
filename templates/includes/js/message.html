@@ -1,7 +1,7 @@
 <script type="text/x-handlebars-template" id="template-message">
     <li class="lcb-message {{#if mentioned}}lcb-message-mentioned{{/if}} {{#if fragment}}lcb-message-fragment{{/if}} {{#if own}}lcb-message-own{{/if}} {{#if fragment}}lcb-message-paste{{/if}}" data-owner="{{owner.id}}">
         {{#unless fragment}}
-            <img class="lcb-message-avatar lcb-avatar lcb-room-poke" src="{{'/api/getProfilePicture/' + owner.username}}" />
+            <img class="lcb-message-avatar lcb-avatar lcb-room-poke" src="/getProfilePicture/{{owner.username}}" />
         {{/unless}}
         <div class="lcb-message-meta">
             {{#unless fragment}}
