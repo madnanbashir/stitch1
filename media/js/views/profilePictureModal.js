@@ -131,13 +131,11 @@
                         $('#photo-input').val('');
 
                         setTimeout(function(){
-                            var pp = $('.lcb-avatar')[0];
-                            var src = thisObj.getImgSrc(pp.src) + "?" + new Date().getTime();
-                            pp.src = src;
-
-                            var pp2 = document.getElementById('profile-photo');
-                            var src = thisObj.getImgSrc(pp2.src) + "?" + new Date().getTime();
-                            pp2.src = src;
+                            var profilePics = $('.profile-pic');
+                            profilePics.each(function (i, pp) {
+                                var src = thisObj.getImgSrc(pp.src) + "?" + new Date().getTime();
+                                pp.src = src;
+                            });
 
                         }, 1000);
 
