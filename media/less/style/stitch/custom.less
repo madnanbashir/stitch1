@@ -1,0 +1,88 @@
+body, html {
+	font-family: 'Open Sans', sans-serif;
+    .base_font_size();
+}
+
+.lcb-account-button {
+	background: none;
+}
+
+.lcb-client {
+	background: @dark_blue;
+}
+
+.lcb-sidebar {
+	background: @dark_blue;
+	padding: 10px 0 0 15px;
+	width: 230px;
+
+	@media (max-width: @phone-size) {
+		width: 200px;
+	}
+}
+
+.lcb-sidebar:after {
+	display: none;
+}
+
+.lcb-sidebar, 
+.lcb-tabs, 
+.lcb-tab {
+	border: none;
+}
+
+.lcb-tab {
+	.base_font_size();
+	margin: 3px 0;
+}
+
+.lcb-tab.selected {
+	margin-right: 0px;
+	background: none;
+}
+
+.lcb-tab .fa-th {
+	margin-right: 5px;
+}
+
+.lcb-account-button {
+	margin: 10px 0 15px 0;
+	height: 55px;
+	line-height: 55px;
+}
+
+.lcb-account-button-name, 
+.lcb-account-button-username {
+	.base_font_size();
+	margin-left: 55px;
+}
+
+.lcb-account-button-username {
+	margin-top: 10px;
+}
+
+.lcb-account-button-avatar {
+	width: 45px;
+	height: 45px;
+}
+
+.dropdown-menu > li > a {
+	padding: 5px 10px 5px 10px;
+}
+
+.lcb-rooms-list-item-last-active {
+	margin-top: -15px;
+}
+
+.lcb-rooms-list-item {
+	padding: 10px 19px 13px 15px
+}
+
+.lcb-rooms-list-item-slug {
+	margin-left: 5px;
+}
+
+.lcb-rooms-list-item-name {
+	.bold_font();
+	.base_font_size();
+}
