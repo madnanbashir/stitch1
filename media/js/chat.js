@@ -7,6 +7,7 @@
 //= require views/window.js
 //= require views/panes.js
 //= require views/modals.js
+//= require views/profilePictureModal.js
 //= require views/upload.js
 //= require views/client.js
 //= require client.js

@@ -8,7 +8,9 @@ var bcrypt = require('bcryptjs'),
     crypto = require('crypto'),
     md5 = require('MD5'),
     hash = require('node_hash'),
-    settings = require('./../config');
+    settings = require('./../config'),
+    fs = require('fs'),
+    path = require('path');
 
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
@@ -92,6 +94,11 @@ var UserSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    defaultAvatar: {
+        type: String,
+        required: true,
+        trim: true
+    },
     rooms: [{
 		type: ObjectId,
 		ref: 'Room'
@@ -113,8 +120,19 @@ UserSchema.virtual('local').get(function() {
     return this.provider === 'local';
 });
 
-UserSchema.virtual('avatar').get(function() {
-    return md5(this.email);
+UserSchema.pre('validate', function(next) {
+    var user = this;
+
+    fs.readdir(path.resolve(__dirname, '../../media/profile_icons'), function(err, files) {
+        if (err) {
+            return next(err);
+        }
+
+        var randomPicIndex = Math.floor((Math.random() * files.length));
+
+        user.defaultAvatar = files[randomPicIndex];
+        next();
+    });
 });
 
 UserSchema.pre('save', function(next) {
@@ -264,8 +282,7 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
-        position: this.position,
-        avatar: this.avatar
+        position: this.position
     };
 });
 
