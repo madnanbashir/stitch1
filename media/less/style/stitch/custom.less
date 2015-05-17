@@ -3,10 +3,6 @@ body, html {
     .base_font_size();
 }
 
-.lcb-account-button {
-	background: none;
-}
-
 .lcb-client {
 	background: @dark_blue;
 }
@@ -51,6 +47,11 @@ body, html {
 	line-height: 55px;
 }
 
+.lcb-account-button, 
+.lcb-account-button:active {
+	background: none;
+}
+
 .lcb-account-button-name, 
 .lcb-account-button-username {
 	.base_font_size();
@@ -70,19 +71,146 @@ body, html {
 	padding: 5px 10px 5px 10px;
 }
 
-.lcb-rooms-list-item-last-active {
-	margin-top: -15px;
-}
-
 .lcb-rooms-list-item {
 	padding: 10px 19px 13px 15px
 }
 
 .lcb-rooms-list-item-slug {
 	margin-left: 5px;
+
+	@media (max-width: @phone-size) {
+		margin-left: 0px;
+	}
 }
 
 .lcb-rooms-list-item-name {
 	.bold_font();
 	.base_font_size();
+}
+
+.lcb-rooms-list-item-description {
+	margin: 5px 0 4px 0;
+	font-size: 14px;
+}
+
+.lcb-rooms-list-item-last-active {
+	float: left;
+	margin-top: 5px
+}
+
+.lcb-rooms-list-item-switch {
+	top: 10px;
+	right: 15px;
+}
+
+.onoffswitch label::after {
+	display: none;
+}
+
+.lcb-pane {
+	border: none;
+}
+
+.lcb-rooms-browser-filter-label {
+	line-height: 30px;
+	margin-right: 10px;
+}
+
+.lcb-rooms-browser-filter-input {
+	font-size: 18px;
+}
+
+.lcb-header {
+	background: none;
+	border: none;
+}
+
+.lcb-header:after {
+	display: none;
+}
+
+
+
+
+
+
+.lcb-room-heading {
+	font-size: 24px;
+}
+
+.lcb-room-header {
+	padding: 15px;
+}
+
+.lcb-room-header-actions {
+	top: 10px;
+}
+
+.lcb-room-heading .name {
+	.bold_font();
+}
+
+.lcb-message {
+	padding: 10px;
+}
+
+.lcb-message-name {
+	display: inline-block;
+}
+
+.lcb-message-time {
+	float: none;
+	margin-left: 10px;
+	position: initial;
+}
+
+.lcb-message.lcb-message-own {
+	background: none;
+}
+
+.lcb-room-sidebar-heading {
+	line-height: 34px;
+}
+
+.lcb-room-sidebar-user-avatar {
+	position: initial;
+	margin: 2px 7px 4px 3px;
+	float: left;
+}
+
+.lcb-room-sidebar-files-add,
+.lcb-room-sidebar-invite-provider {
+	background: @green;
+	color: white;
+	width: auto;
+	font-size: 12px;
+	line-height: 12px;
+	padding: 0px 8px;
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	height: 24px;
+}
+
+.lcb-room-sidebar-invite-provider:focus {
+	outline: none !important;
+	color: white !important;
+}
+
+.lcb-room-sidebar-files-add:hover,
+.lcb-room-sidebar-invite-provider:hover {
+	color: white;
+}
+
+.lcb-room-heading .btn {
+	font-size: 24px;
+	margin: -3px 0 0 10px;
+}
+
+
+
+
+
+.lcb-entry-button:focus {
+	outline: none !important;
 }
