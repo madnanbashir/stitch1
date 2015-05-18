@@ -19,6 +19,7 @@
             'click .show-edit-room': 'showEditRoom',
             'click .hide-edit-room': 'hideEditRoom',
             'click .submit-edit-room': 'submitEditRoom',
+            'click .show-chat-history': 'showChatHistory',
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
             'click .lcb-upload-trigger': 'upload',
@@ -234,6 +235,10 @@
                 description: description
             });
             this.$('.lcb-room-edit').modal('hide');
+        },
+        showChatHistory: function(e) {
+            e.preventDefault();
+            this.model.trigger('chat:show', this.model);
         },
         archiveRoom: function(e) {
             var that = this;

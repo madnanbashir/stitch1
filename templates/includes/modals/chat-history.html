@@ -1,0 +1,26 @@
+<div id="lcb-chat-history" class="modal fade">
+</div>
+
+<script type="text/x-handlebars-template" id="template-chat-history">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">
+                    Transcript for {{name}}
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="lcb-transcript-filters clearfix">
+                    <div class="lcb-transcript-daterange">
+                        <i class="fa fa-calendar fa-lg"></i>
+                        <span class="lcb-transcript-daterange-range"></span>
+                        <b class="caret"></b>
+                    </div>
+                    <input type="search" class="lcb-search-entry form-control" placeholder="Search..." />
+                </div>
+                <ul class="lcb-transcript-messages"></ul>
+            </div>
+        </div>
+    </div>
+</script>
