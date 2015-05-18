@@ -314,4 +314,67 @@
         }
     });
 
+    window.LCB.FindProvidersView = window.LCB.ModalView.extend({
+        events: {
+            'keyup .lcb-providers-browser-filter-input': 'filter',
+        },
+        initialize: function(options) {
+            this.client = options.client;
+            this.template = Handlebars.compile($('#template-provider-browser-item').html());
+            this.providers = options.providers;
+            // this.rooms.on('add', this.add, this);
+            // this.rooms.on('remove', this.remove, this);
+            // this.rooms.on('change:description change:name', this.update, this);
+            // this.rooms.on('change:lastActive', _.debounce(this.updateLastActive, 200), this);
+            // this.rooms.on('change:joined', this.updateToggles, this);
+            // this.rooms.on('users:add', this.addUser, this);
+            // this.rooms.on('users:remove', this.removeUser, this);
+            // this.rooms.on('users:add users:remove add remove', this.sort, this);
+            // this.rooms.current.on('change:id', function(current, id) {
+            //     // We only care about the list pane
+            //     if (id !== 'list') return;
+            //     this.sort();
+            // }, this);
+        },
+        remove: function(room) {
+            this.$('.lcb-providers-list-item[data-id=' + room.id + ']').remove();
+        },
+        update: function(room) {
+            this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-name').text(room.get('name'));
+            this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-description').text(room.get('description'));
+        },
+        sort: function(model) {
+            var that = this,
+                $items = this.$('.lcb-providers-list-item');
+            // We only care about other users
+            if (this.$el.hasClass('hide') && model && model.id === this.client.user.id)
+                return;
+            $items.sort(function(a, b){
+                var ar = that.providers.get($(a).data('id')),
+                    br = that.providers.get($(b).data('id')),
+                    au = ar.users.length,
+                    bu = br.users.length,
+                    aj = ar.get('joined'),
+                    bj = br.get('joined')
+                if ((aj && bj) || (!aj && !bj)) {
+                    if (au > bu) return -1;
+                    if (au < bu) return 1;
+                }
+                if (aj) return -1;
+                if (bj) return 1;
+                return 0;
+            });
+            $items.detach().appendTo(this.$('.lcb-providers-list'));
+        },
+        filter: function(e) {
+            e.preventDefault();
+            var $input = $(e.currentTarget),
+                needle = $input.val().toLowerCase();
+            this.$('.lcb-providers-list-item').each(function () {
+                var haystack = $(this).find('.lcb-providers-list-item-name').text().toLowerCase();
+                $(this).toggle(haystack.indexOf(needle) >= 0);
+            });
+        },
+    });
+
 }(window, $, _);

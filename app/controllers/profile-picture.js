@@ -98,7 +98,8 @@ module.exports = function() {
                     // and pipe it to Express' response
                     .pipe(res);
             } else {
-                var readStream = fs.createReadStream(path.resolve('media/profile_icons/', req.user.defaultAvatar));
+                // console.log('path.resolve', req.user.defaultAvatar);
+                var readStream = fs.createReadStream(path.resolve('media/profile_icons/', req.user.defaultAvatar || 'User-blue-icon.png'));
                 // We replaced all the event handlers with a simple call to readStream.pipe()
                 readStream.pipe(res);
             }
