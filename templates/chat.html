@@ -1,6 +1,8 @@
 <% extends 'base.html' %>
 
-<% block css %><% endblock %>
+<% block css %>
+    <link rel="stylesheet" type="text/css" href="/media/js/vendor/bootstrap-daterangepicker/daterangepicker-bs3.css" />
+<% endblock %>
 
 <% block js %>
 <$ 'chat' | js | safe $>
@@ -138,5 +140,6 @@
         <% include 'includes/modals/upload.html' %>
         <% include 'includes/modals/find-patients.html' %>
         <% include 'includes/modals/add-room.html' %>
+        <% include 'includes/modals/chat-history.html' %>
     </div><!-- lcb-client end -->
 <% endblock %>

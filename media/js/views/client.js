@@ -91,6 +91,10 @@
                 el: this.$el.find('#lcb-add-room'),
                 client: this.client
             });
+            this.chatHistoryModal = new window.LCB.ChatHistoryView({
+                el: this.$el.find('#lcb-chat-history'),
+                rooms: this.client.rooms
+            });
 
             //
             // Misc
