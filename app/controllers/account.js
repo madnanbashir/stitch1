@@ -43,7 +43,8 @@ module.exports = function() {
         }).sample().value();
 
         if(req.query.token && req.query.email) {
-            verifyUser(req.query.email, req.query.token, function (err, verificationMessage) {
+            verifyUser(req.query.email, req.query.token, req.headers.host, function (err, verificationMessage) {
+
                 res.render('login.html',{
                     photo: image,
                     auth: auth.providers,
@@ -67,7 +68,7 @@ module.exports = function() {
         }).sample().value();
 
         if(req.query.token && req.query.email) {
-            verifyUser(req.query.email, req.query.token, function (err, verificationMessage) {
+            verifyUser(req.query.email, req.query.token, req.headers.host, function (err, verificationMessage) {
                 res.render('register.html',{
                     photo: image,
                     auth: auth.providers,
@@ -113,7 +114,7 @@ module.exports = function() {
                 }
 
                 var mailConfig = {
-                    subject: 'Welcome to Stitch Technologies!',
+                    subject: 'Invitation to Stitch',
                     receiver: {
                         email: req.body.Email
                     },
@@ -342,7 +343,7 @@ module.exports = function() {
                 organizationDomain: fields.email.substr((fields.email.indexOf("@") + 1))
             };
 
-            getUserVerification(data, function (err, data) {
+            getUserVerification(data, req.headers.host, function (err, data) {
                 core.account.create('local', data, function(err, user) {
                     if (err) {
                         var message = 'Sorry, we could not process your request';
@@ -367,12 +368,14 @@ module.exports = function() {
                     }
 
                     if(data.isVerified){
+
                         return res.status(201).json({
                             status: 'success',
                             message: 'You\'ve been registered, ' +
                             'please try logging in now!'
                         });
                     } else{
+
                         return res.status(201).json({
                             status: 'success',
                             message: 'You\'ve been registered, ' +
@@ -435,7 +438,7 @@ module.exports = function() {
         }
     });
 
-    function verifyUser(email, token, callback){
+    function verifyUser(email, token, thisHost, callback){
         User.findOne({email: email}, function (err, user) {
             if (err) {
                 return callback(err);
@@ -443,12 +446,23 @@ module.exports = function() {
 
             var isVerified = user.verificationToken === token;
 
-            User.update({email: email}, {$set: {isVerified: isVerified}}, function (err, user) {
+            User.update({email: email}, {$set: {isVerified: isVerified}}, function (err, ret) {
                 if (err) {
                     return callback(err);
                 }
 
                 if (isVerified) {
+                    var mailConfig = {
+                        subject: 'You’re all set up!',
+                        receiver: {
+                            email: email
+                        },
+                        inviteTeamUrl: 'http://' + thisHost + '/login',
+                        organizationName: user.organizationName
+                    };
+
+                    mailService.sendEmail('confirmation', mailConfig);
+
                     callback(null, {
                         text: 'User verified successfully',
                         colour: 'green'
@@ -463,7 +477,7 @@ module.exports = function() {
         });
     }
 
-    function getUserVerification(data, callback) {
+    function getUserVerification(data, thisHost, callback) {
 
         User.findOneAndRemove({ email: data.email }, function(err, user) {
             if(err){
@@ -483,11 +497,11 @@ module.exports = function() {
                     var token = buffer.toString('hex');
 
                     var mailConfig = {
-                        subject: 'Welcome to Stitch Technologies!',
+                        subject: 'Invitation to Stitch',
                         receiver: {
                             email: data.email
                         },
-                        confirmAccountUrl: 'http://' + req.headers.host + '/login?token=' + token + '&email=' + data.email
+                        confirmAccountUrl: 'http://' + thisHost + '/login?token=' + token + '&email=' + data.email
                     };
 
                     mailService.sendEmail('authentication', mailConfig);

@@ -444,7 +444,19 @@
             "click #lcb-invite-new-provider-confirm": "inviteNewProvider",
         },
         inviteNewProvider: function () {
-            console.log('TBD');
+            $.ajax({
+                type: "POST",
+                url: "/mail/inviteProvider",
+                data: {
+                    'receiverEmail': $('#lcb-invite-new-provider-email').val(),
+                    'message': $('#lcb-invite-new-provider-message').val(),
+                    'inviterName': this.client.user.get('displayName'),
+                    'inviterOrg': this.client.user.get('organizationName')
+                },
+                success: function(res){
+                    //console.log('invitation mail sent');
+                }
+            });
         }
     });
 

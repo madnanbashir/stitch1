@@ -300,7 +300,8 @@ UserSchema.method('toJSON', function() {
         lastName: this.lastName,
         username: this.username,
         displayName: this.displayName,
-        position: this.position
+        position: this.position,
+        organizationName: this.organizationName
     };
 });
 

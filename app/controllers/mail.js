@@ -82,22 +82,50 @@ module.exports = function() {
         });
     });
 
-    app.post('/mail/invitation/:email', function(req, res){
+    app.post('/mail/inviteProvider', function(req, res){
         crypto.randomBytes(20, function (err, buffer) {
+            if(err){
+                return callback(err);
+            }
+
             var token = buffer.toString('hex');
 
-            var mailConfig = {
-                subject: 'Welcome to Stitch Technologies!',
-                receiver: {
-                    email: req.params.email
-                },
-                joinTeamUrl: hostUrl + '/login/' + token
-            };
+            core.account.create('local', {
+                email: req.body.receiverEmail,
+                verificationToken: token,
+                isVerified: false,
 
-            mailService.sendEmail('invitation', mailConfig);
+                provider: 'local',
+                username: 'username' + token,
+                password: 'password' + token,
+                firstName: 'firstName' + token,
+                lastName: 'lastName' + token,
+                displayName: 'displayName' + token,
+                position: 'position' + token,
+                organizationName: 'organizationName' + token,
+                organizationDomain: 'organizationDomain' + token
 
-            res.send({
-                message: 'invitation mail sent'
+            }, function (err, user) {
+                if(err){
+                    console.log(err);
+                    return res.sendStatus(504);
+                }
+
+                var mailConfig = {
+                    subject: req.body.inviterName + ' has invited you to join ' + req.body.inviterOrg + ' on Stitch',
+                    receiver: {
+                        email: req.body.receiverEmail
+                    },
+                    joinTeamUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' + req.body.receiverEmail,
+                    inviterName: req.body.inviterName,
+                    inviterOrg: req.body.inviterOrg
+                };
+
+                mailService.sendEmail('invitation', mailConfig);
+
+                res.status(201).send({
+                    message: 'invitation mail sent'
+                });
             });
         });
     });
