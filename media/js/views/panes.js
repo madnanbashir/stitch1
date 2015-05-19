@@ -66,7 +66,7 @@
         },
         alert: function(message) {
             var $tab = this.$('.lcb-tab[data-id=' + message.room.id + ']'),
-                $total = $tab.find('.lcb-tab-alerts-total'),
+                $newMessageCaret = $tab.find('.lcb-message-caret'),
                 $mentions = $tab.find('.lcb-tab-alerts-mentions');
             if (message.historical || $tab.length === 0
                     || ((this.rooms.current.get('id') === message.room.id) && this.focus)) {
@@ -77,7 +77,7 @@
                 mentions = parseInt($tab.data('count-mentions')) || 0;
             // All messages
             $tab.data('count-total', ++total);
-            $total.text(total);
+            $newMessageCaret.addClass('new-message');
             // Just mentions
             if (new RegExp('\\B@(' + this.client.user.get('username') + ')(?!@)\\b', 'i').test(message.text)) {
                 $tab.data('count-mentions', ++mentions);
@@ -86,10 +86,10 @@
         },
         clearAlerts: function(id) {
             var $tab = this.$('.lcb-tab[data-id=' + id + ']'),
-                $total = $tab.find('.lcb-tab-alerts-total'),
+                $newMessageCaret = $tab.find('.lcb-message-caret'),
                 $mentions = $tab.find('.lcb-tab-alerts-mentions');
             $tab.data('count-total', 0).data('count-mentions', 0);
-            $total.text('');
+            $newMessageCaret.removeClass('new-message');
             $mentions.text('');
         },
         onFocusBlur: function(e) {
