@@ -139,7 +139,7 @@ module.exports = function() {
 
                 res.writeHead(200, {'Content-Type': 'application/json' });
 
-                res.json({
+                res.send({
                     result: 'success',
                     msg: 'success'
                 });
