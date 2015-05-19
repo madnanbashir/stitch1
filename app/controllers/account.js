@@ -43,7 +43,20 @@ module.exports = function() {
         }).sample().value();
 
         if(req.query.token && req.query.email) {
-            verifyUser(req.query.email, req.query.token, req.headers.host, function (err, verificationMessage) {
+            verifyUser(req.query.email, req.query.token, function (err, verificationMessage, user) {
+
+                if(verificationMessage.isVerified) {
+                    var mailConfig = {
+                        subject: 'You’re all set up!',
+                        receiver: {
+                            email: user.email
+                        },
+                        inviteTeamUrl: 'http://' + req.headers.host + '/login',
+                        organizationName: user.organizationName
+                    };
+
+                    mailService.sendEmail('confirmation', mailConfig);
+                }
 
                 res.render('login.html',{
                     photo: image,
@@ -68,7 +81,7 @@ module.exports = function() {
         }).sample().value();
 
         if(req.query.token && req.query.email) {
-            verifyUser(req.query.email, req.query.token, req.headers.host, function (err, verificationMessage) {
+            verifyUser(req.query.email, req.query.token, function (err, verificationMessage) {
                 res.render('register.html',{
                     photo: image,
                     auth: auth.providers,
@@ -344,6 +357,7 @@ module.exports = function() {
             };
 
             getUserVerification(data, req.headers.host, function (err, data) {
+
                 core.account.create('local', data, function(err, user) {
                     if (err) {
                         var message = 'Sorry, we could not process your request';
@@ -368,6 +382,17 @@ module.exports = function() {
                     }
 
                     if(data.isVerified){
+
+                        var mailConfig = {
+                            subject: 'You’re all set up!',
+                            receiver: {
+                                email: data.email
+                            },
+                            inviteTeamUrl: 'http://' + req.headers.host + '/login',
+                            organizationName: data.organizationName
+                        };
+
+                        mailService.sendEmail('confirmation', mailConfig);
 
                         return res.status(201).json({
                             status: 'success',
@@ -438,9 +463,9 @@ module.exports = function() {
         }
     });
 
-    function verifyUser(email, token, thisHost, callback){
+    function verifyUser(email, token, callback){
         User.findOne({email: email}, function (err, user) {
-            if (err) {
+            if (err || !user) {
                 return callback(err);
             }
 
@@ -452,25 +477,16 @@ module.exports = function() {
                 }
 
                 if (isVerified) {
-                    var mailConfig = {
-                        subject: 'You’re all set up!',
-                        receiver: {
-                            email: email
-                        },
-                        inviteTeamUrl: 'http://' + thisHost + '/login',
-                        organizationName: user.organizationName
-                    };
-
-                    mailService.sendEmail('confirmation', mailConfig);
-
                     callback(null, {
                         text: 'User verified successfully',
-                        colour: 'green'
-                    });
+                        colour: 'green',
+                        isVerified: isVerified
+                    }, user);
                 } else {
                     callback(null, {
                         text: 'Tokens did not match',
-                        colour: 'red'
+                        colour: 'red',
+                        isVerified: isVerified
                     });
                 }
             });
