@@ -74,7 +74,7 @@ var UserSchema = new mongoose.Schema({
         trim: true,
         lowercase: true,
         unique: true,
-        match: /^[^\.][a-z0-9_\.]+[^\.]$/i
+        match: /^[\w][\w\-\.]*[\w]$/i
     },
     organizationName: {
         type: String,
