@@ -137,7 +137,7 @@ module.exports = function() {
 
                 mailService.sendEmail('get-started', mailConfig);
 
-                res.writeHead(200, {'Content-Type': 'application/json' });
+                res.set('Content-Type', 'text/html');
 
                 res.send({
                     result: 'success',
