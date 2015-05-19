@@ -321,25 +321,10 @@
         initialize: function(options) {
             var self = this;
             this.client = options.client;
-            // this.template = Handlebars.compile($('#template-provider-browser-item').html());
-            // this.providers = options.providers;
             this.listenTo(this.collection, 'add', this.addProvider);
             this.$el.on('show.bs.modal', function(){
                 self.client.getUsersSync();
             });
-            // this.rooms.on('add', this.add, this);
-            // this.rooms.on('remove', this.remove, this);
-            // this.rooms.on('change:description change:name', this.update, this);
-            // this.rooms.on('change:lastActive', _.debounce(this.updateLastActive, 200), this);
-            // this.rooms.on('change:joined', this.updateToggles, this);
-            // this.rooms.on('users:add', this.addUser, this);
-            // this.rooms.on('users:remove', this.removeUser, this);
-            // this.rooms.on('users:add users:remove add remove', this.sort, this);
-            // this.rooms.current.on('change:id', function(current, id) {
-            //     // We only care about the list pane
-            //     if (id !== 'list') return;
-            //     this.sort();
-            // }, this);
         },
         // add: function(provider) {
         //     var room = room.toJSON ? room.toJSON() : room,
@@ -348,7 +333,7 @@
         //         });
         //     this.$('.lcb-rooms-list').append(this.template(context));
         // },
-/*        remove: function(room) {
+        /*        remove: function(room) {
             this.$('.lcb-providers-list-item[data-id=' + room.id + ']').remove();
         },
         update: function(room) {
@@ -359,14 +344,11 @@
           this.collection.each(this.add);
           return this;
         },
-/*        remove : function(item, collection, options){
-            var oriIndex = options.index;
-            $('.lcb-providers-list-item:eq(' + oriIndex +')').remove();
-        },*/
         addProvider: function (item) {
           var providerView = new ProviderView ({ model: item , client : this.client, hideModal: _.bind(this.hide, this)}),
               rendered = providerView.render().el;
-/*              index = this.collection.indexOf(item),
+            /*
+            index = this.collection.indexOf(item),
               rows = $('.lcb-providers-list-item');
           if (rows.length > 0) {
             if(index !== 0)
@@ -381,6 +363,9 @@
         },
         hide: function(){
             this.$el.modal('hide');
+        },
+        show: function(){
+            this.$el.modal('show');
         },
         sort: function(model) {
             var that = this,
@@ -436,11 +421,31 @@
             var username = this.model.get('username')
             var roomId = this.client.rooms.current.get('id');
             console.log(username, roomId);
+            //TODO not a perfect solution, need to figure out why mutiple lcb-entry-input return
+            $('.lcb-room .lcb-entry .lcb-entry-input').eq(0).text('@' + username);
             this.client.inviteToRoom(username, roomId);
             this.hideModal();
-
         }
 
+    });
+    window.LCB.InviteNewProviderView = Backbone.View.extend({
+        initialize: function(options){
+            var self = this;
+            this.client = options.client;
+            this.parentModal = options.parentModal;
+            this.$el.on('show.bs.modal', function(){
+                self.parentModal.hide();
+            });
+            this.$el.on('hide.bs.modal', function(){
+                self.parentModal.show();
+            });
+        },
+        events: {
+            "click #lcb-invite-new-provider-confirm": "inviteNewProvider",
+        },
+        inviteNewProvider: function () {
+            console.log('TBD');
+        }
     });
 
 }(window, $, _);

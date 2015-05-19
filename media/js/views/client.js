@@ -100,6 +100,11 @@
                 collection: this.client.users,
                 client: this.client
             });
+            this.inviteNewProviderModal = new window.LCB.InviteNewProviderView({
+                el: this.$el.find('#lcb-invite-new-provider'),
+                client: this.client,
+                parentModal: this.findProvidersModal
+            });
 
             //
             // Misc
