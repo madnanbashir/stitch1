@@ -323,8 +323,7 @@
             this.client = options.client;
             // this.template = Handlebars.compile($('#template-provider-browser-item').html());
             // this.providers = options.providers;
-            this.listenTo(this.collection, 'add', this.add);
-            this.listenTo(this.collection, 'remove', this.remove);
+            this.listenTo(this.collection, 'add', this.addProvider);
             this.$el.on('show.bs.modal', function(){
                 self.client.getUsersSync();
             });
@@ -360,12 +359,12 @@
           this.collection.each(this.add);
           return this;
         },
-        remove : function(item, collection, options){
+/*        remove : function(item, collection, options){
             var oriIndex = options.index;
             $('.lcb-providers-list-item:eq(' + oriIndex +')').remove();
-        },
-        add: function (item) {
-          var providerView = new ProviderView ({ model: item }),
+        },*/
+        addProvider: function (item) {
+          var providerView = new ProviderView ({ model: item , client : this.client, hideModal: _.bind(this.hide, this)}),
               rendered = providerView.render().el;
 /*              index = this.collection.indexOf(item),
               rows = $('.lcb-providers-list-item');
@@ -380,7 +379,9 @@
           // $(rendered).show("slow");
           this.$el.find("table>tbody").append(rendered);
         },
-
+        hide: function(){
+            this.$el.modal('hide');
+        },
         sort: function(model) {
             var that = this,
                 $items = this.$('.lcb-providers-list-item');
@@ -418,17 +419,27 @@
     var ProviderView = Backbone.View.extend({
         tagName:"tr",
         className : 'lcb-providers-list-item',
-        initialize: function(){
+        initialize: function(options){
+            this.client = options.client;
             this._tmplRender = Handlebars.compile($('#template-provider-browser-item').html());
+            this.hideModal = options.hideModal;
         },
         events: {
-            // "click td": "clicked",
+            "click td": "sendInvite",
         },
         render: function(){
             var innerHTML = this._tmplRender({user:this.model.toJSON()});
             this.el.innerHTML = innerHTML;
             return this;
         },
+        sendInvite: function () {
+            var username = this.model.get('username')
+            var roomId = this.client.rooms.current.get('id');
+            console.log(username, roomId);
+            this.client.inviteToRoom(username, roomId);
+            this.hideModal();
+
+        }
 
     });
 
