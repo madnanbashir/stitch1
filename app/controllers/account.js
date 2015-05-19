@@ -137,7 +137,7 @@ module.exports = function() {
 
                 mailService.sendEmail('get-started', mailConfig);
 
-                res.sendStatus(200);
+                res.json('success');
             });
         });
     });
