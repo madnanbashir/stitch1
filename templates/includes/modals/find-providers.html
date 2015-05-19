@@ -9,12 +9,20 @@
             </div>
             <div class="modal-body">
                 <div class="lcb-providers-browser-filter">
-                    <label class="lcb-providers-browser-filter-label" for="lcb-providers-browser-filter-input">
+<!--                     <label class="lcb-providers-browser-filter-label" for="lcb-providers-browser-filter-input">
                         <i class="fa fa-search"></i>
-                    </label>
-                    <input id="lcb-providers-browser-filter-input" class="lcb-providers-browser-filter-input" type="search" autofocus />
+                    </label> -->
+                    <div class="lcb-filter-input">
+                        <input id="lcb-providers-browser-filter-input" class="lcb-providers-browser-filter-input form-control " type="search" autofocus />
+                    </div>
                 </div>
-                <ul class="lcb-providers-list"></ul>
+                <table class="lcb-providers-list table">
+                    <thead>
+                        <th>Name</th>
+                        <th>Title</th>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -314,14 +314,20 @@
         }
     });
 
-    window.LCB.FindProvidersView = window.LCB.ModalView.extend({
+    window.LCB.FindProvidersView = Backbone.View.extend({
         events: {
             'keyup .lcb-providers-browser-filter-input': 'filter',
         },
         initialize: function(options) {
+            var self = this;
             this.client = options.client;
-            this.template = Handlebars.compile($('#template-provider-browser-item').html());
-            this.providers = options.providers;
+            // this.template = Handlebars.compile($('#template-provider-browser-item').html());
+            // this.providers = options.providers;
+            this.listenTo(this.collection, 'add', this.add);
+            this.listenTo(this.collection, 'remove', this.remove);
+            this.$el.on('show.bs.modal', function(){
+                self.client.getUsersSync();
+            });
             // this.rooms.on('add', this.add, this);
             // this.rooms.on('remove', this.remove, this);
             // this.rooms.on('change:description change:name', this.update, this);
@@ -336,13 +342,45 @@
             //     this.sort();
             // }, this);
         },
-        remove: function(room) {
+        // add: function(provider) {
+        //     var room = room.toJSON ? room.toJSON() : room,
+        //         context = _.extend(room, {
+        //             lastActive: moment(room.lastActive).calendar()
+        //         });
+        //     this.$('.lcb-rooms-list').append(this.template(context));
+        // },
+/*        remove: function(room) {
             this.$('.lcb-providers-list-item[data-id=' + room.id + ']').remove();
         },
         update: function(room) {
             this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-name').text(room.get('name'));
             this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-description').text(room.get('description'));
+        },*/
+        render: function () {
+          this.collection.each(this.add);
+          return this;
         },
+        remove : function(item, collection, options){
+            var oriIndex = options.index;
+            $('.lcb-providers-list-item:eq(' + oriIndex +')').remove();
+        },
+        add: function (item) {
+          var providerView = new ProviderView ({ model: item }),
+              rendered = providerView.render().el;
+/*              index = this.collection.indexOf(item),
+              rows = $('.lcb-providers-list-item');
+          if (rows.length > 0) {
+            if(index !== 0)
+                $(rows[index - 1]).after(rendered);
+            else
+                this.$el.find("table>tbody").prepend(rendered);
+          } else {
+            this.$el.find("table>tbody").append(rendered);
+          }*/
+          // $(rendered).show("slow");
+          this.$el.find("table>tbody").append(rendered);
+        },
+
         sort: function(model) {
             var that = this,
                 $items = this.$('.lcb-providers-list-item');
@@ -375,6 +413,23 @@
                 $(this).toggle(haystack.indexOf(needle) >= 0);
             });
         },
+    });
+
+    var ProviderView = Backbone.View.extend({
+        tagName:"tr",
+        className : 'lcb-providers-list-item',
+        initialize: function(){
+            this._tmplRender = Handlebars.compile($('#template-provider-browser-item').html());
+        },
+        events: {
+            // "click td": "clicked",
+        },
+        render: function(){
+            var innerHTML = this._tmplRender({user:this.model.toJSON()});
+            this.el.innerHTML = innerHTML;
+            return this;
+        },
+
     });
 
 }(window, $, _);

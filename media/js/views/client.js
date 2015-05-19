@@ -97,7 +97,7 @@
             });
             this.findProvidersModal = new window.LCB.FindProvidersView({
                 el: this.$el.find('#lcb-find-providers'),
-                providers: this.client.users,
+                collection: this.client.users,
                 client: this.client
             });
 
