@@ -53,14 +53,17 @@
             if (!id) {
                 id = 'list';
             }
-            this.$el.find('.lcb-tab').removeClass('selected')
-                .filter('[data-id=' + id + ']').addClass('selected');
+            this.$el.find('.lcb-tab').removeClass('selected');
+
+            if (id !== 'list') {
+                this.$el.find('[data-id=' + id + ']').addClass('selected');
+            }
         },
         leave: function(e) {
             e.preventDefault();
             var id = $(e.currentTarget).closest('[data-id]').data('id');
             this.client.events.trigger('rooms:leave', id);
-            if ($('.lcb-room.lcb-pane').length === 0) {
+            if ($('.lcb-room.lcb-pane').not('.hide').length === 0) {
                 $('.lcb-landing').removeClass('hide');
             }
         },
