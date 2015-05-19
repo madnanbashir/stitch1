@@ -1,6 +1,6 @@
 {
   "name": "lets-chat",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "description": "A HIPAA-compliant team communication platform for medical providers.",
   "private": false,
   "main": "app.js",
