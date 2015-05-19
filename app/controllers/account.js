@@ -138,7 +138,8 @@ module.exports = function() {
                 mailService.sendEmail('get-started', mailConfig);
 
                 res.json({
-                    status: 'success'
+                    result: 'success',
+                    msg: 'success'
                 });
             });
         });
