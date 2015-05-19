@@ -56,7 +56,7 @@
             // Scroll Locking
             this.scrollLocked = true;
             this.$messages.on('scroll',  _.bind(this.updateScrollLock, this));
-            this.atwhoMentions();
+            // this.atwhoMentions();
             this.atwhoAllMentions();
             this.atwhoRooms();
             this.atwhoEmotes();
@@ -109,7 +109,7 @@
                 });
             };
         },
-        atwhoMentions: function () {
+/*        atwhoMentions: function () {
 
             function sorter(query, items, search_key) {
                 return items.sort(function(a, b) {
@@ -127,7 +127,7 @@
                     tpl_eval: this.atwhoTplEval
                 }
             });
-        },
+        },*/
         atwhoAllMentions: function () {
             var that = this;
 
@@ -145,7 +145,7 @@
 
             this.$('.lcb-entry-input')
             .atwho({
-                at: '@@',
+                at: '@',
                 tpl: '<li data-value="@${username}"><img class="profile-pic" src="/getProfilePicture/${username}" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
                     filter: filter,
