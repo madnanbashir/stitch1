@@ -1,0 +1,27 @@
+<% extends 'base.html' %>
+
+<% block title %>Register &middot; Stitch<% endblock %>
+
+<% block class %>lcb-login animated fadeIn<% endblock %>
+
+<% block attributes %>
+    style="background-image: url('./media/img/photos/blue_background.jpg');"
+<% endblock %>
+
+<% block js %>
+<$ 'verifyMail' | js | safe $>
+<% endblock %>
+
+<% block body %>
+    <section class="lcb-login-main">
+        <h1 class="lcb-login-logo">Stitch</h1>
+        <div class="lcb-login-boxes">
+            <form class="lcb-login-box lcb-login-box-login validate" action="./account/register" method="post" data-refresh="true">
+                <h2 class="lcb-login-box-heading">Account Activation Required</h2>
+                <p>
+                    Please check your mail for your account activation link
+                </p>
+            </form>
+        </div>
+    </section>
+<% endblock %>

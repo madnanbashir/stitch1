@@ -1,0 +1,23 @@
+<% include ../../common/views/header.ejs %>
+<h2>
+    Hi <%= receiver.displayName %>>,
+</h2>
+
+<div class="mail-text">
+    You have direct messages waiting for you:
+    [X] from [Name]
+    [X] from [Name]
+</div>
+<a href="<%= loginUrl %>" class="myButton">
+    Sign-in to Stitch
+</a>
+<div class="mail-text">
+    Your sign-in email is: <%= receiver.email %>
+</div>
+<div class="mail-text">
+    If you need anything, we can help. Reply to this email or send a new one to us by clicking here. We're online 7 days a week and love to hear from you :)
+
+    See you inside!
+    -- Team Stitch
+</div>
+<% include ../../common/views/footer.ejs %>

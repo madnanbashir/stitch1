@@ -1,0 +1,25 @@
+<% include ../../common/views/header.ejs %>
+<h2>
+    Nice job!
+</h2>
+
+<div class="mail-text">
+    You're set up with Stitch at [Organization Name]. The next step is to start communicating on Stitch with your team.
+    <br />
+    To invite your colleagues, we've made a simple invite page:
+</div>
+<a href="<%= inviteTeamUrl %>" class="myButton">
+    Invite your team now!
+</a>
+<div class="mail-hint">
+    (At the link you'll be able to check who's already invited.)
+</div>
+<div class="mail-text">
+    You might want to check out the Stitch Guide to Getting Started — top tips to get the most out of Stitch.
+
+    Can we help with anything else? Reply to this email or send a new one to us by clicking here. We love to hear from you!
+
+    See you inside!
+    -- Team Stitch
+</div>
+<% include ../../common/views/footer.ejs %>

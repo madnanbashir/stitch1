@@ -9,6 +9,10 @@ var passport = require('passport');
 function getMiddleware(fail) {
     return function(req, res, next) {
         if (req.user) {
+            if(!req.user.isVerified){
+                return res.redirect('/verify-mail')
+            }
+
             next();
             return;
         }

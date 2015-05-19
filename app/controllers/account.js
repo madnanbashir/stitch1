@@ -7,9 +7,11 @@
 var _ = require('lodash'),
     fs = require('fs'),
     passport = require('passport'),
+    crypto = require('crypto'),
     auth = require('./../auth/index'),
     path = require('path'),
-    settings = require('./../config');
+    settings = require('./../config'),
+    mailService = require('../emails/mailService');
 
 module.exports = function() {
 
@@ -39,7 +41,100 @@ module.exports = function() {
         var image = _.chain(images).filter(function(file) {
             return /\.(gif|jpg|jpeg|png)$/i.test(file);
         }).sample().value();
-        res.render('login.html', {
+
+        if(req.query.token && req.query.email) {
+            verifyUser(req.query.email, req.query.token, function (err, verificationMessage) {
+                res.render('login.html',{
+                    photo: image,
+                    auth: auth.providers,
+                    verificationMessage: verificationMessage
+                })
+            })
+        } else {
+            res.render('login.html', {
+                photo: image,
+                auth: auth.providers
+            });
+        }
+    });
+
+    app.get('/register', function(req, res) {
+
+        var imagePath = path.resolve('media/img/photos');
+        var images = fs.readdirSync(imagePath);
+        var image = _.chain(images).filter(function(file) {
+            return /\.(gif|jpg|jpeg|png)$/i.test(file);
+        }).sample().value();
+
+        if(req.query.token && req.query.email) {
+            verifyUser(req.query.email, req.query.token, function (err, verificationMessage) {
+                res.render('register.html',{
+                    photo: image,
+                    auth: auth.providers,
+                    email: req.query.email,
+                    organization: req.query.organization,
+                    verificationMessage: verificationMessage
+                })
+            })
+        } else {
+            res.render('login.html', {
+                photo: image,
+                auth: auth.providers
+            });
+        }
+    });
+
+    app.post('/get-started', function(req, res) {
+        crypto.randomBytes(20, function (err, buffer) {
+            if(err){
+                return callback(err);
+            }
+
+            var token = buffer.toString('hex');
+
+            core.account.create('local', {
+                email: req.body.Email,
+                organizationName: req.body.Organization,
+                organizationDomain: req.body.Email.substr((req.body.Email.indexOf("@") + 1)),
+                verificationToken: token,
+                isVerified: false,
+
+                provider: 'local',
+                username: 'username' + token,
+                password: 'password' + token,
+                firstName: 'firstName' + token,
+                lastName: 'lastName' + token,
+                displayName: 'displayName' + token,
+                position: 'position' + token
+            }, function (err, user) {
+                if(err){
+                    console.log(err);
+                    return res.sendStatus(504);
+                }
+
+                var mailConfig = {
+                    subject: 'Welcome to Stitch Technologies!',
+                    receiver: {
+                        email: req.body.Email
+                    },
+                    getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
+                        req.body.Email + '&organization=' + req.body.Organization
+                };
+
+                mailService.sendEmail('get-started', mailConfig);
+
+                res.sendStatus(200);
+            });
+        });
+    });
+
+    app.get('/verify-mail', function(req, res) {
+        var imagePath = path.resolve('media/img/photos');
+        var images = fs.readdirSync(imagePath);
+        var image = _.chain(images).filter(function(file) {
+            return /\.(gif|jpg|jpeg|png)$/i.test(file);
+        }).sample().value();
+        res.render('verify-mail.html', {
             photo: image,
             auth: auth.providers
         });
@@ -238,39 +333,52 @@ module.exports = function() {
                 username: fields.username,
                 email: fields.email,
                 password: fields.password,
+                verificationToken: fields.token,
                 firstName: fields.firstName || fields.firstname || fields['first-name'],
                 lastName: fields.lastName || fields.lastname || fields['last-name'],
                 displayName: fields.displayName || fields.displayname || fields['display-name'],
-                position: fields.position || fields.position || fields['position']
+                position: fields.position || fields.position || fields['position'],
+                organizationName: fields.organization,
+                organizationDomain: fields.email.substr((fields.email.indexOf("@") + 1))
             };
 
-            core.account.create('local', data, function(err, user) {
-                if (err) {
-                    var message = 'Sorry, we could not process your request';
-                    // User already exists
-                    if (err.code === 11000) {
-                        message = 'Email has already been taken';
+            getUserVerification(data, function (err, data) {
+                core.account.create('local', data, function(err, user) {
+                    if (err) {
+                        var message = 'Sorry, we could not process your request';
+                        // User already exists
+                        if (err.code === 11000) {
+                            message = 'Email has already been taken';
+                        }
+                        // Invalid username
+                        if (err.errors) {
+                            message = _.map(err.errors, function(error) {
+                                return error.message;
+                            }).join(' ');
+                            // If all else fails...
+                        } else {
+                            console.error(err);
+                        }
+                        // Notify
+                        return res.status(400).json({
+                            status: 'error',
+                            message: message
+                        });
                     }
-                    // Invalid username
-                    if (err.errors) {
-                        message = _.map(err.errors, function(error) {
-                            return error.message;
-                        }).join(' ');
-                    // If all else fails...
-                    } else {
-                        console.error(err);
-                    }
-                    // Notify
-                    return res.status(400).json({
-                        status: 'error',
-                        message: message
-                    });
-                }
 
-                res.status(201).json({
-                    status: 'success',
-                    message: 'You\'ve been registered, ' +
-                             'please try logging in now!'
+                    if(data.isVerified){
+                        return res.status(201).json({
+                            status: 'success',
+                            message: 'You\'ve been registered, ' +
+                            'please try logging in now!'
+                        });
+                    } else{
+                        return res.status(201).json({
+                            status: 'success',
+                            message: 'You\'ve been registered, ' +
+                            'please check your mail to activate your account'
+                        });
+                    }
                 });
             });
         },
@@ -326,4 +434,70 @@ module.exports = function() {
             });
         }
     });
+
+    function verifyUser(email, token, callback){
+        User.findOne({email: email}, function (err, user) {
+            if (err) {
+                return callback(err);
+            }
+
+            var isVerified = user.verificationToken === token;
+
+            User.update({email: email}, {$set: {isVerified: isVerified}}, function (err, user) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (isVerified) {
+                    callback(null, {
+                        text: 'User verified successfully',
+                        colour: 'green'
+                    });
+                } else {
+                    callback(null, {
+                        text: 'Tokens did not match',
+                        colour: 'red'
+                    });
+                }
+            });
+        });
+    }
+
+    function getUserVerification(data, callback) {
+
+        User.findOneAndRemove({ email: data.email }, function(err, user) {
+            if(err){
+                return callback(err);
+            }
+
+            if (user && user.isVerified) {
+                data.isVerified = true;
+
+                return callback(null, data);
+            } else {
+                crypto.randomBytes(20, function (err, buffer) {
+                    if(err){
+                        return callback(err);
+                    }
+
+                    var token = buffer.toString('hex');
+
+                    var mailConfig = {
+                        subject: 'Welcome to Stitch Technologies!',
+                        receiver: {
+                            email: data.email
+                        },
+                        confirmAccountUrl: 'http://' + req.headers.host + '/login?token=' + token + '&email=' + data.email
+                    };
+
+                    mailService.sendEmail('authentication', mailConfig);
+
+                    data.verificationToken = token;
+                    data.isVerified = false;
+
+                    return callback(null, data);
+                });
+            }
+        });
+    }
 };

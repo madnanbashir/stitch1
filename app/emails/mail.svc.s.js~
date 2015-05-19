@@ -1,0 +1,49 @@
+'use strict';
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+var path = require('path');
+var templatesDir = path.join(__dirname, './templates'), emailTemplates = require('email-templates');
+
+// create reusable transporter object using SMTP transport
+var transporter = nodemailer.createTransport(smtpTransport({
+    host: 'localhost',
+    port: 25,
+    ignoreTLS: true
+}));
+
+function sendEmail(templateName, mailConfig, receiver, callback) {
+    emailTemplates(templatesDir, function (err, template) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            // set defaults
+            mailConfig.user = mailConfig.user ? mailConfig.user : receiver;
+            mailConfig.from = mailConfig.from ? mailConfig.from : 'Es2alni <info@es2alni.com>';
+            template(templateName, mailConfig, function (err, html, text) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    transporter.sendMail({
+                        to: receiver.email,
+                        from: mailConfig.from,
+                        subject: mailConfig.subject,
+                        html: html,
+                        text: text
+                    }, function (error, info) {
+                        if (error) {
+                            console.log(error);
+                            callback(error);
+                        }
+                        else {
+                            console.log('Message sent: ' + info.response);
+                            callback(null, info.response);
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+exports.sendEmail = sendEmail;

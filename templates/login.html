@@ -17,6 +17,11 @@
         <h1 class="lcb-login-logo">Stitch</h1>
         <div class="lcb-login-boxes">
             <form class="lcb-login-box lcb-login-box-login validate" action="./account/login" method="post" data-refresh="true">
+                <% if verificationMessage %>
+                <label id="verificationMsgLabel" style="color: <$ verificationMessage.colour $>">
+                    <$ verificationMessage.text $>
+                </label>
+                <% endif %>
                 <h2 class="lcb-login-box-heading">Sign in</h2>
                 <img class="lcb-login-avatar" style="display: none;" />
                 <div class="form-group">
@@ -61,6 +66,9 @@
                     </div>
                      <div class="form-group">
                         <input class="required form-control" name="position" type="text" placeholder="Title" maxlength="50" />
+                    </div>
+                    <div class="form-group">
+                        <input class="required form-control" name="organization" type="text" placeholder="Organization" />
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-9">

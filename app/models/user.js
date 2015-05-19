@@ -76,6 +76,14 @@ var UserSchema = new mongoose.Schema({
         unique: true,
         match: /^[^\.][a-z0-9_\.]+[^\.]$/i
     },
+    organizationName: {
+        type: String,
+        required: true
+    },
+    organizationDomain: {
+        type: String,
+        required: true
+    },
     displayName: {
         type: String,
         required: true,
@@ -92,6 +100,16 @@ var UserSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        trim: true
+    },
+    isVerified: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    verificationToken: {
+        type: String,
+        required: false,
         trim: true
     },
     defaultAvatar: {
