@@ -139,7 +139,7 @@ module.exports = function() {
 
                 res.set({
                     'content-type': 'application/json',
-                    'content-encoding': 'application/json'
+                    'content-encoding': 'gzip'
                 }).send({
                     result: 'success',
                     msg: 'success'
