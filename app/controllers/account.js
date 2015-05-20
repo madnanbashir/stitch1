@@ -101,33 +101,35 @@ module.exports = function() {
 
 
     app.get('/get-started', cors(), function(req, res) {
-        crypto.randomBytes(20, function (err, buffer) {
-            if(err){
-                return callback(err);
-            }
-
-            var token = buffer.toString('hex');
-
-            core.account.create('local', {
-                email: req.query.email,
-                organizationName: req.query.organization,
-                organizationDomain: req.query.email.substr((req.query.email.indexOf("@") + 1)),
-                verificationToken: token,
-                isVerified: false,
-
-                provider: 'local',
-                username: 'username' + token,
-                password: 'password' + token,
-                firstName: 'firstName' + token,
-                lastName: 'lastName' + token,
-                displayName: 'displayName' + token,
-                position: 'position' + token
-            }, function (err, user) {
-                if(err){
-                    console.log(err);
-                    return res.sendStatus(504);
+        if(req.query.email && req.query.organization) {
+            crypto.randomBytes(20, function (err, buffer) {
+                if (err) {
+                    return callback(err);
                 }
 
+                var token = buffer.toString('hex');
+
+                core.account.create('local', {
+                    email: req.query.email,
+                    organizationName: req.query.organization,
+                    organizationDomain: req.query.email.substr((req.query.email.indexOf("@") + 1)),
+                    verificationToken: token,
+                    isVerified: false,
+
+                    provider: 'local',
+                    username: 'username' + token,
+                    password: 'password' + token,
+                    firstName: 'firstName' + token,
+                    lastName: 'lastName' + token,
+                    displayName: 'displayName' + token,
+                    position: 'position' + token
+                }, function (err, user) {
+                    if (err) {
+                        console.log(err);
+                        return res.sendStatus(504);
+                    }
+
+<<<<<<< HEAD
                 var mailConfig = {
                     subject: 'Invitation to Stitch',
                     receiver: {
@@ -137,18 +139,34 @@ module.exports = function() {
 
                     req.query.email + '&organization=' + req.query.organization
                 };
+=======
+                    var mailConfig = {
+                        subject: 'Invitation to Stitch',
+                        receiver: {
+                            email: req.query.email
+                        },
+                        getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
+                        req.query.email + '&organization=' + req.query.organization
+                    };
+>>>>>>> 77de3b5428bde92b583193787ce249992026b6bc
 
-                mailService.sendEmail('get-started', mailConfig);
+                    mailService.sendEmail('get-started', mailConfig);
 
+<<<<<<< HEAD
                 res.set({
                     'content-type': 'application/json',
                     'content-encoding': 'gzip'
                 }).send({
                     result: 'success',
                     msg: 'success'
+=======
+                    res.sendStatus(200);
+>>>>>>> 77de3b5428bde92b583193787ce249992026b6bc
                 });
             });
-        });
+        } else {
+            res.sendStatus(404);
+        }
     });
 
     app.get('/verify-mail', function(req, res) {
