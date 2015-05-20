@@ -14,9 +14,12 @@ var bcrypt = require('bcryptjs'),
 
 var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId,
+
     uniqueValidator = require('mongoose-unique-validator'),
     validate = require('mongoose-validate'),
     settings = require('./../config');
+
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var UserSchema = new mongoose.Schema({
     provider: {
@@ -231,6 +234,10 @@ UserSchema.statics.findByToken = function(token, cb) {
         }
 
         bcrypt.compare(hash, user.token, function(err, isMatch) {
+            if (err) {
+                return cb(err);
+            }
+
             if (isMatch) {
                 return cb(null, user);
             }
@@ -242,6 +249,10 @@ UserSchema.statics.findByToken = function(token, cb) {
 
 UserSchema.methods.comparePassword = function(password, cb) {
     bcrypt.compare(password, this.password, function(err, isMatch) {
+        if (err) {
+            return cb(err);
+        }
+
         if (isMatch) {
             return cb(null, true);
         }

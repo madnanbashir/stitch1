@@ -2,9 +2,11 @@
 
 var EventEmitter = require('events').EventEmitter,
     util = require('util'),
+
     _ = require('lodash'),
     ConnectionCollection = require('./connection-collection'),
     mongoose = require('mongoose');
+
 
 function Room(roomId, roomSlug) {
     EventEmitter.call(this);
