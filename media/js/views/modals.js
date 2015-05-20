@@ -341,13 +341,25 @@
             this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-description').text(room.get('description'));
         },*/
         render: function () {
-          this.collection.each(this.add);
-          return this;
+            this.collection.each(this.add);
+            return this;
         },
         addProvider: function (item) {
-          var providerView = new ProviderView ({ model: item , client : this.client, hideModal: _.bind(this.hide, this)}),
-              rendered = providerView.render().el;
-          this.$el.find("table>tbody").append(rendered);
+            var providerView = new ProviderView ({ model: item , client : this.client, hideModal: _.bind(this.hide, this)}),
+                rendered = providerView.render().el;
+
+                //Item will be added to the list in order of name
+                var afterAll = true;
+                this.$el.find('.lcb-providers-list-item').each(function(){
+                    var name = $(this).find('.lcb-providers-list-item-name').text();
+                    if(afterAll && item.get('displayName') < name){
+                        $(this).before(rendered);
+                        afterAll = false;
+                    }
+                })
+                if(afterAll){
+                     this.$el.find('table>tbody').append(rendered);
+                }
         },
         hide: function(){
             this.$el.modal('hide');
@@ -382,6 +394,8 @@
             e.preventDefault();
             var $input = $(e.currentTarget),
                 needle = $input.val().toLowerCase();
+            //TODO:We might want to display message while no matched records
+            //but i think low priorty
             this.$('.lcb-providers-list-item').each(function () {
                 var haystack = $(this).find('.lcb-providers-list-item-name').text().toLowerCase();
                 $(this).toggle(haystack.indexOf(needle) >= 0);
