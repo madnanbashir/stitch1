@@ -11,6 +11,7 @@ var _ = require('lodash'),
     auth = require('./../auth/index'),
     path = require('path'),
     settings = require('./../config'),
+    cors = require('cors'),
     mailService = require('../emails/mailService');
 
 module.exports = function() {
@@ -98,7 +99,9 @@ module.exports = function() {
         }
     });
 
-    app.get('/get-started', function(req, res) {
+
+    app.get('/get-started', cors(), function(req, res) {
+        origin/mail-notifications
         crypto.randomBytes(20, function (err, buffer) {
             if(err){
                 return callback(err);
@@ -132,7 +135,11 @@ module.exports = function() {
                         email: req.query.email
                     },
                     getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
+
                     req.query.email + '&organization=' + req.query.organization
+
+                        req.query.email + '&organization=' + req.query.organization
+            origin/mail-notifications
                 };
 
                 mailService.sendEmail('get-started', mailConfig);
