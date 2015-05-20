@@ -98,7 +98,7 @@ module.exports = function() {
         }
     });
 
-    app.post('/get-started', function(req, res) {
+    app.get('/get-started', function(req, res) {
         crypto.randomBytes(20, function (err, buffer) {
             if(err){
                 return callback(err);
@@ -107,9 +107,9 @@ module.exports = function() {
             var token = buffer.toString('hex');
 
             core.account.create('local', {
-                email: req.body.Email,
-                organizationName: req.body.Organization,
-                organizationDomain: req.body.Email.substr((req.body.Email.indexOf("@") + 1)),
+                email: req.query.email,
+                organizationName: req.query.organization,
+                organizationDomain: req.query.email.substr((req.query.email.indexOf("@") + 1)),
                 verificationToken: token,
                 isVerified: false,
 
@@ -129,15 +129,21 @@ module.exports = function() {
                 var mailConfig = {
                     subject: 'Invitation to Stitch',
                     receiver: {
-                        email: req.body.Email
+                        email: req.query.email
                     },
                     getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
-                        req.body.Email + '&organization=' + req.body.Organization
+                    req.query.email + '&organization=' + req.query.organization
                 };
 
                 mailService.sendEmail('get-started', mailConfig);
 
-                res.sendStatus(200);
+                res.set({
+                    'content-type': 'application/json',
+                    'content-encoding': 'gzip'
+                }).send({
+                    result: 'success',
+                    msg: 'success'
+                });
             });
         });
     });
