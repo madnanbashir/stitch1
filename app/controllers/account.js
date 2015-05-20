@@ -101,7 +101,6 @@ module.exports = function() {
 
 
     app.get('/get-started', cors(), function(req, res) {
-        origin/mail-notifications
         crypto.randomBytes(20, function (err, buffer) {
             if(err){
                 return callback(err);
@@ -137,9 +136,6 @@ module.exports = function() {
                     getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
 
                     req.query.email + '&organization=' + req.query.organization
-
-                        req.query.email + '&organization=' + req.query.organization
-            origin/mail-notifications
                 };
 
                 mailService.sendEmail('get-started', mailConfig);
