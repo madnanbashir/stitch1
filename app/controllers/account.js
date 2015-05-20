@@ -99,7 +99,6 @@ module.exports = function() {
         }
     });
 
-
     app.get('/get-started', cors(), function(req, res) {
         if(req.query.email && req.query.organization) {
             crypto.randomBytes(20, function (err, buffer) {
@@ -129,17 +128,6 @@ module.exports = function() {
                         return res.sendStatus(504);
                     }
 
-<<<<<<< HEAD
-                var mailConfig = {
-                    subject: 'Invitation to Stitch',
-                    receiver: {
-                        email: req.query.email
-                    },
-                    getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
-
-                    req.query.email + '&organization=' + req.query.organization
-                };
-=======
                     var mailConfig = {
                         subject: 'Invitation to Stitch',
                         receiver: {
@@ -148,20 +136,10 @@ module.exports = function() {
                         getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
                         req.query.email + '&organization=' + req.query.organization
                     };
->>>>>>> 77de3b5428bde92b583193787ce249992026b6bc
 
                     mailService.sendEmail('get-started', mailConfig);
 
-<<<<<<< HEAD
-                res.set({
-                    'content-type': 'application/json',
-                    'content-encoding': 'gzip'
-                }).send({
-                    result: 'success',
-                    msg: 'success'
-=======
                     res.sendStatus(200);
->>>>>>> 77de3b5428bde92b583193787ce249992026b6bc
                 });
             });
         } else {
