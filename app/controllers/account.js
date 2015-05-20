@@ -199,16 +199,22 @@ module.exports = function() {
     //
     // Sockets
     //
+
+    var capitalizeFirstLetter = function(string) {
+           return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
     app.io.route('account', {
         whoami: function(req, res) {
             res.json(req.user);
         },
+
         profile: function(req, res) {
             var form = req.body || req.data,
                 data = {
-                    displayName: form.displayName || form['display-name'],
                     firstName: form.firstName || form['first-name'],
                     lastName: form.lastName || form['last-name'],
+                    displayName: firstName + " " + lastName,
                     position: form.position || form['position']
                 };
 
@@ -357,10 +363,10 @@ module.exports = function() {
                 email: fields.email,
                 password: fields.password,
                 verificationToken: fields.token,
-                firstName: fields.firstName || fields.firstname || fields['first-name'],
-                lastName: fields.lastName || fields.lastname || fields['last-name'],
-                displayName: fields.displayName || fields.displayname || fields['display-name'],
-                position: fields.position || fields.position || fields['position'],
+                firstName: capitalizeFirstLetter(fields.firstName || fields.firstname || fields['first-name']),
+                lastName: capitalizeFirstLetter(fields.lastName || fields.lastname || fields['last-name']),
+                displayName: capitalizeFirstLetter(fields.firstName || fields.firstname || fields['first-name']) + " " + capitalizeFirstLetter(fields.lastName || fields.lastname || fields['last-name']),
+                position: capitalizeFirstLetter(fields.position || fields.position || fields['position']),
                 organizationName: fields.organization,
                 organizationDomain: fields.email.substr((fields.email.indexOf("@") + 1))
             };
