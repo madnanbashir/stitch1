@@ -347,18 +347,6 @@
         addProvider: function (item) {
           var providerView = new ProviderView ({ model: item , client : this.client, hideModal: _.bind(this.hide, this)}),
               rendered = providerView.render().el;
-            /*
-            index = this.collection.indexOf(item),
-              rows = $('.lcb-providers-list-item');
-          if (rows.length > 0) {
-            if(index !== 0)
-                $(rows[index - 1]).after(rendered);
-            else
-                this.$el.find("table>tbody").prepend(rendered);
-          } else {
-            this.$el.find("table>tbody").append(rendered);
-          }*/
-          // $(rendered).show("slow");
           this.$el.find("table>tbody").append(rendered);
         },
         hide: function(){
@@ -420,11 +408,17 @@
         sendInvite: function () {
             var username = this.model.get('username')
             var roomId = this.client.rooms.current.get('id');
-            console.log(username, roomId);
-            //TODO not a perfect solution, need to figure out why mutiple lcb-entry-input return
-            $('.lcb-room .lcb-entry .lcb-entry-input').eq(0).text('@' + username);
+
+            //There might be multiple entry box, one message box per room
+            var $activedMessageBox = $('.lcb-room:not(.hide) .lcb-entry-input');
+
+            var currentContent = ($activedMessageBox.val() === '' ? '' : $activedMessageBox.val() + ' ');
+            $activedMessageBox.val(currentContent +'@' + username + ' ');
+            // TODO double check whether we need foucs
+            // at least in chrome, focus works,and you can type text diretly even the modal
+            // window is on the top, but a little bit wired
+            // $activedMessageBox.focus();
             this.client.inviteToRoom(username, roomId);
-            this.hideModal();
         }
 
     });
