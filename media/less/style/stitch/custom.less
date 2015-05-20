@@ -232,3 +232,32 @@ body, html {
     font-size: 0.9em;
 }
 
+
+
+
+.modal.lcb-scrollable-modal{
+    height: 100%;
+    .modal-dialog{
+        height: 80%;
+    }
+    .modal-content{
+        height: 100%;
+        padding-bottom: 57px;
+    }
+
+    //Don't add parent class(e.g. modal-dialog, .modal-content) to support overwritten in other sytle file, e.g wizard-layout
+    .modal-body{
+        height: 100%;
+        overflow-y: auto;
+    }
+    // .modal-header{
+
+    // }
+    // .modal-footer
+    //   background-color lightgoldenrodyellow
+    //   height modal-footer-height
+    //   margin-top 0px
+    //   padding 15px
+    //   p
+    //     margin-bottom 0px //overwrite the default margin-bottom
+}
