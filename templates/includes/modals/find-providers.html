@@ -2,7 +2,6 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-<!--                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
                 <a class="btn btn-success lcb-invite-new-provider pull-right" data-toggle="modal" data-target="#lcb-invite-new-provider" href="#!/invite-new-provider">
                     <i class="fa fa-plus"></i>
                     <span>Invite New</span>
@@ -12,15 +11,15 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <div class="lcb-providers-browser-filter">
-                    <div class="lcb-filter-input">
-                        <input id="lcb-providers-browser-filter-input" class="lcb-providers-browser-filter-input form-control " type="search" autofocus placeholder="Search by name ..."/>
-                    </div>
+                <div class="lcb-filter-input">
+                    <input id="lcb-providers-browser-filter-input" class="form-control " type="search" autofocus placeholder="Search by name ..."/>
                 </div>
                 <table class="lcb-providers-list table table-hover">
                     <thead>
-                        <th>Name</th>
-                        <th>Title</th>
+                        <tr>
+                            <th>Name</th>
+                            <th>Title</th>
+                        </tr>
                     </thead>
                     <tbody></tbody>
                 </table>

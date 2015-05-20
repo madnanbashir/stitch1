@@ -178,13 +178,13 @@
 
     window.LCB.FindPatientsView = window.LCB.ModalView.extend({
         events: {
-            'keyup .lcb-rooms-browser-filter-input': 'filter',
+            'keyup #lcb-rooms-browser-filter-input': 'filter',
             'change .lcb-rooms-switch': 'toggle',
             'click .lcb-rooms-switch-label': 'toggle'
         },
         initialize: function(options) {
             this.client = options.client;
-            this.template = Handlebars.compile($('#template-room-browser-item').html());
+            this.template = Handlebars.compile($('#template-room-browser-row').html());
             this.userTemplate = Handlebars.compile($('#template-room-browser-item-user').html());
             this.rooms = options.rooms;
             this.rooms.on('add', this.add, this);
@@ -221,21 +221,21 @@
                 context = _.extend(room, {
                     lastActive: moment(room.lastActive).calendar()
                 });
-            this.$('.lcb-rooms-list').append(this.template(context));
+            this.$('.lcb-rooms-list-modal tbody').append(this.template(context));
         },
         remove: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + ']').remove();
+            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + ']').remove();
         },
         update: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-name-modal').text(room.get('name'));
+            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
         },
         updateLastActive: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
+            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
         },
         sort: function(model) {
             var that = this,
-                $items = this.$('.lcb-rooms-list-item');
+                $items = this.$('.lcb-rooms-list-item-row');
             // We only care about other users
             if (this.$el.hasClass('hide') && model && model.id === this.client.user.id)
                 return;
@@ -254,23 +254,23 @@
                 if (bj) return 1;
                 return 0;
             });
-            $items.detach().appendTo(this.$('.lcb-rooms-list'));
+            $items.detach().appendTo(this.$('.lcb-rooms-list-modal'));
         },
         filter: function(e) {
             e.preventDefault();
             var $input = $(e.currentTarget),
                 needle = $input.val().toLowerCase();
-            this.$('.lcb-rooms-list-item').each(function () {
-                var haystack = $(this).find('.lcb-rooms-list-item-name').text().toLowerCase();
+            this.$('.lcb-rooms-list-item-row').each(function () {
+                var haystack = $(this).find('.lcb-rooms-list-item-name-modal').text().toLowerCase();
                 $(this).toggle(haystack.indexOf(needle) >= 0);
             });
         },
         addUser: function(user, room) {
-            this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
+            this.$('.lcb-rooms-list-item-row[data-id="' + room.id + '"]')
                 .find('.lcb-rooms-list-users').prepend(this.userTemplate(user.toJSON()));
         },
         removeUser: function(user, room) {
-            this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
+            this.$('.lcb-rooms-list-item-row[data-id="' + room.id + '"]')
                 .find('.lcb-rooms-list-user[data-id="' + user.id + '"]').remove();
         }
     });
@@ -316,7 +316,7 @@
 
     window.LCB.FindProvidersView = Backbone.View.extend({
         events: {
-            'keyup .lcb-providers-browser-filter-input': 'filter',
+            'keyup #lcb-providers-browser-filter-input': 'filter',
         },
         initialize: function(options) {
             var self = this;
