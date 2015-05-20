@@ -100,47 +100,51 @@ module.exports = function() {
     });
 
     app.get('/get-started', cors(), function(req, res) {
-        crypto.randomBytes(20, function (err, buffer) {
-            if(err){
-                return callback(err);
-            }
-
-            var token = buffer.toString('hex');
-
-            core.account.create('local', {
-                email: req.query.email,
-                organizationName: req.query.organization,
-                organizationDomain: req.query.email.substr((req.query.email.indexOf("@") + 1)),
-                verificationToken: token,
-                isVerified: false,
-
-                provider: 'local',
-                username: 'username' + token,
-                password: 'password' + token,
-                firstName: 'firstName' + token,
-                lastName: 'lastName' + token,
-                displayName: 'displayName' + token,
-                position: 'position' + token
-            }, function (err, user) {
-                if(err){
-                    console.log(err);
-                    return res.sendStatus(504);
+        if(req.query.email && req.query.organization) {
+            crypto.randomBytes(20, function (err, buffer) {
+                if (err) {
+                    return callback(err);
                 }
 
-                var mailConfig = {
-                    subject: 'Invitation to Stitch',
-                    receiver: {
-                        email: req.query.email
-                    },
-                    getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
+                var token = buffer.toString('hex');
+
+                core.account.create('local', {
+                    email: req.query.email,
+                    organizationName: req.query.organization,
+                    organizationDomain: req.query.email.substr((req.query.email.indexOf("@") + 1)),
+                    verificationToken: token,
+                    isVerified: false,
+
+                    provider: 'local',
+                    username: 'username' + token,
+                    password: 'password' + token,
+                    firstName: 'firstName' + token,
+                    lastName: 'lastName' + token,
+                    displayName: 'displayName' + token,
+                    position: 'position' + token
+                }, function (err, user) {
+                    if (err) {
+                        console.log(err);
+                        return res.sendStatus(504);
+                    }
+
+                    var mailConfig = {
+                        subject: 'Invitation to Stitch',
+                        receiver: {
+                            email: req.query.email
+                        },
+                        getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
                         req.query.email + '&organization=' + req.query.organization
-                };
+                    };
 
-                mailService.sendEmail('get-started', mailConfig);
+                    mailService.sendEmail('get-started', mailConfig);
 
-                res.sendStatus(200);
+                    res.sendStatus(200);
+                });
             });
-        });
+        } else {
+            res.sendStatus(404);
+        }
     });
 
     app.get('/verify-mail', function(req, res) {
