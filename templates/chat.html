@@ -1,8 +1,6 @@
 <% extends 'base.html' %>
 
-<% block css %>
-    <link rel="stylesheet" type="text/css" href="/media/js/vendor/bootstrap-daterangepicker/daterangepicker-bs3.css" />
-<% endblock %>
+<% block css %><% endblock %>
 
 <% block js %>
 <$ 'chat' | js | safe $>
@@ -16,7 +14,6 @@
     <% include 'includes/js/tab.html' %>
     <% include 'includes/js/browser-item.html' %>
     <% include 'includes/js/browser-item-user.html' %>
-    <% include 'includes/js/browser-provider.html' %>
     <% include 'includes/js/upload.html' %>
 <% endblock %>
 
@@ -29,13 +26,16 @@
             <div class="lcb-header-logo">Stitch</div>
         </div>
         <section class="lcb-sidebar">
-            <div class="dropdown">
+            <div class="dropdown" id="set_1">
                 <a class="lcb-account-button dropdown-toggle" data-toggle="dropdown" href="3">
-                    <img class="lcb-account-button-avatar lcb-avatar profile-pic" src="/getProfilePicture" />
+                    <img class="lcb-account-button-avatar lcb-avatar" src="https://www.gravatar.com/avatar/<$ account.avatar $>?s=50" />
                     <span class="lcb-account-button-name"><$ account.displayName $></span>
                     <span class="lcb-account-button-username">@<$ account.username $></span>
                     <i class="lcb-account-button-chevron fa fa-chevron-down"></i>
                 </a>
+
+				<input type="hidden" required class="txt_start_tour" value="<$ account.new_user.chat_tour $>" user-state="<$ account.new_user $>" />
+				<button type="button" style="display: none;" class="btn btn-info indicator btn_update_preference" name="submit"><i class="icon-ok"></i> Update state</button>
                 <ul class="dropdown-menu dropdown-menu-right">
                     <li>
                         <a data-toggle="modal" href="#lcb-profile">
@@ -72,7 +72,7 @@
                 <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
                     <i class="fa fa-plug"></i> Disconnected
                 </span>
-                <span class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
+                <span id="set_3" class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
                     <i class="fa fa-refresh"></i> Connected
                 </span>
                 <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
@@ -80,53 +80,32 @@
                 </span>
             </div>
             <ul class="lcb-tabs">
-                <li data-id="list" class="lcb-tab lcb-tab-home">
+                <li data-id="list" class="lcb-tab lcb-tab-home" id="set_2">
                     <a href="#!/">
                         <i class="fa fa-th"></i><span> Patients</span>
                     </a>
                 </li>
             </ul>
-            <a class="btn btn-success lcb-find-patients" data-toggle="modal" data-target="#lcb-find-patients" href="#!/find-patients">
-                <i class="fa fa-search"></i>
-                <span>Find Patients</span>
-            </a>
         </section>
         <section class="lcb-panes">
-
-<!--            <div class="lcb-rooms-browser lcb-pane hide" data-id="list">
-               <header class="lcb-rooms-browser-header">
-                   <h2 class="lcb-rooms-browser-heading">
-                       Patient Rooms
-                   </h2>
-                   <div class="lcb-rooms-browser-filter">
-                       <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
-                           <i class="fa fa-search"></i>
-                       </label>
-                       <input id="lcb-rooms-browser-filter-input" class="lcb-rooms-browser-filter-input" type="search" autofocus />
-                   </div>
-                   <a class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
-                       <i class="fa fa-plus"></i>
-                       <span>Add Patient</span>
-                   </a>
-               </header>
-               <ul class="lcb-rooms-list"></ul>
-               < include 'includes/modals/add-room.html' >
-           </div> -->
-
-            <div class="lcb-landing lcb-pane">
-                <div class="lcb-landing-container">
-                    <section class="lcb-landing-title">
-                        <h2>Welcome!</h2>
-                        <!--<img src="/media/img/title.png" class="title">-->
-                        <h4>Central hub for medical team communication.</h4>
-                        <h4>Completely HIPAA-secure, patient-centric, and instantly searchable.</h4>
-                        <h4>Continuously available where and when you need it.</h4>
-                        <h5>1. Select or create a patient on the left panel.</h5>
-                        <h5>2. Invite other providers into the conversation on the right panel or by typing '@@'.</h5>
-                        <h5>3. Directly message providers on the right panel or by typing '@'</h5>
-                        <h5>4. Enjoy access to real-time conversations across multiple devices, easy file sharing, and search.</h5>
-                    </section>
-                </div>
+            <div class="lcb-rooms-browser lcb-pane hide" data-id="list">
+                <header class="lcb-rooms-browser-header">
+                    <h2 class="lcb-rooms-browser-heading">
+                        Patient Rooms
+                    </h2>
+                    <div class="lcb-rooms-browser-filter" id="set_5">
+                        <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
+                            <i class="fa fa-search"></i>
+                        </label>
+                        <input id="lcb-rooms-browser-filter-input" class="lcb-rooms-browser-filter-input" type="search" autofocus />
+                    </div>
+                    <a id="set_4" class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
+                        <i class="fa fa-plus"></i>
+                        <span>Add Patient</span>
+                    </a>
+                </header>
+                <ul class="lcb-rooms-list"></ul>
+                <% include 'includes/modals/add-room.html' %>
             </div>
         </section>
         <div class="lcb-loading lcb-client-loading">
@@ -134,14 +113,9 @@
         </div>
         <% include 'includes/modals/notifications.html' %>
         <% include 'includes/modals/profile.html' %>
-        <% include 'includes/modals/profile-picture.html' %>
         <% include 'includes/modals/account.html' %>
         <% include 'includes/modals/xmpp.html' %>
         <% include 'includes/modals/tokens.html' %>
         <% include 'includes/modals/upload.html' %>
-        <% include 'includes/modals/find-patients.html' %>
-        <% include 'includes/modals/find-providers.html' %>
-        <% include 'includes/modals/add-room.html' %>
-        <% include 'includes/modals/chat-history.html' %>
     </div><!-- lcb-client end -->
 <% endblock %>

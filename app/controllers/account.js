@@ -27,6 +27,7 @@ module.exports = function() {
     // Routes
     //
     app.get('/', middlewares.requireLogin.redirect, function(req, res) {
+		//console.log(req.user.new_user);
         res.render('chat.html', {
             account: req.user,
             settings: settings
@@ -34,6 +35,7 @@ module.exports = function() {
     });
 
     app.get('/login', function(req, res) {
+		console.log(req);
         var imagePath = path.resolve('media/img/photos');
         var images = fs.readdirSync(imagePath);
         var image = _.chain(images).filter(function(file) {
@@ -77,6 +79,9 @@ module.exports = function() {
     app.post('/account/token/revoke', middlewares.requireLogin, function(req, res) {
         req.io.route('account:revoke_token');
     });
+	app.post('/account/updateUserState', middlewares.requireLogin, function(req, res) {
+        req.io.route('account:updateUserState');
+    });
 
     //
     // Sockets
@@ -109,6 +114,24 @@ module.exports = function() {
 
                 res.json(user);
             });
+        },
+		updateUserState: function(req, res) {
+console.log(req.user.new_user);
+			var form = req.body || req.data;
+			var user_state = req.user.new_user;
+			user_state[form.tour_page] = 0;
+			var data = {new_user: user_state};
+			core.account.update(req.user._id, data, function (err, user, reason) {
+				if (err || !user) {
+					return res.status(400).json({
+						status: 'error',
+						message: 'Unable to update your account.',
+						reason: reason,
+						errors: err
+					});
+				}
+				res.json(user);
+			});
         },
         settings: function(req, res) {
             if (req.user.using_token) {
@@ -241,7 +264,8 @@ module.exports = function() {
                 firstName: fields.firstName || fields.firstname || fields['first-name'],
                 lastName: fields.lastName || fields.lastname || fields['last-name'],
                 displayName: fields.displayName || fields.displayname || fields['display-name'],
-                position: fields.position || fields.position || fields['position']
+                position: fields.position || fields.position || fields['position'],
+				new_user: {login_tour: '1', chat_tour: '1'}
             };
 
             core.account.create('local', data, function(err, user) {

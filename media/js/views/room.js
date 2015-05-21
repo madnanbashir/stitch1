@@ -19,7 +19,6 @@
             'click .show-edit-room': 'showEditRoom',
             'click .hide-edit-room': 'hideEditRoom',
             'click .submit-edit-room': 'submitEditRoom',
-            'click .show-chat-history': 'showChatHistory',
             'click .archive-room': 'archiveRoom',
             'click .lcb-room-poke': 'poke',
             'click .lcb-upload-trigger': 'upload',
@@ -120,7 +119,7 @@
             this.$('.lcb-entry-input')
             .atwho({
                 at: '@',
-                tpl: '<li data-value="@${username}"><img class="profile-pic" src="/getProfilePicture/${username}" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
+                tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
                     filter: this.getAtwhoUserFilter(this.model.users),
                     sorter: sorter,
@@ -146,7 +145,7 @@
             this.$('.lcb-entry-input')
             .atwho({
                 at: '@@',
-                tpl: '<li data-value="@${username}"><img class="profile-pic" src="/getProfilePicture/${username}" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
+                tpl: '<li data-value="@${username}"><img src="https://www.gravatar.com/avatar/${avatar}?s=20" height="20" width="20" /> @${username} <small>${displayName}</small></li>',
                 callbacks: {
                     filter: filter,
                     sorter: sorter,
@@ -235,10 +234,6 @@
                 description: description
             });
             this.$('.lcb-room-edit').modal('hide');
-        },
-        showChatHistory: function(e) {
-            e.preventDefault();
-            this.model.trigger('chat:show', this.model);
         },
         archiveRoom: function(e) {
             var that = this;

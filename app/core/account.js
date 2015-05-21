@@ -23,6 +23,7 @@ AccountManager.prototype.update = function(id, options, cb) {
     var usernameChange = false;
 
     User.findById(id, function (err, user) {
+
         if (err) {
             return cb(err);
         }
@@ -41,6 +42,9 @@ AccountManager.prototype.update = function(id, options, cb) {
         }
         if (options.email) {
             user.email = options.email;
+        }
+		if (options.new_user) {
+            user.new_user = options.new_user;
         }
 
         if (options.username && options.username !== user.username) {
@@ -67,6 +71,7 @@ AccountManager.prototype.update = function(id, options, cb) {
         }
 
         user.save(function(err, user) {
+			console.log(err);
             if (err) {
                 return cb(err);
             }

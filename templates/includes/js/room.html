@@ -10,15 +10,17 @@
                             title="Edit Room">
                             <i class="fa fa-edit"></i>
                         </a>
-                        <a class="btn hidden-xs show-chat-history"
-                            title="Chat History">
-                            <i class="fa fa-history"></i>
-                        </a>
-                        <% if settings.files.enable %>
-                        <a class="btn hidden-xs lcb-upload-trigger" title="Upload Files" href="#">
-                            <i class="fa fa-upload"></i>
-                        </a>
-                        <% endif %>
+                       
+                        <div class="lcb-rooms-browser-filter" id="set_9">
+                        <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
+                            <i class="fa fa-search"></i>
+                        </label>
+                        <input id="lcb-rooms-browser-filter-input" class="lcb-rooms-browser-filter-input" type="search" autofocus />
+                    </div>
+                    <a id="set_8" class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
+                        <i class="fa fa-plus"></i>
+                        <span>Add Patient</span>
+                    </a>
                     </h2>
                     <div class="lcb-room-description">
                         <p>{{description}}</p>
@@ -37,28 +39,23 @@
                 <button type="submit" class="btn btn-info lcb-entry-button">Send</button>
             </form>
         </div><!-- lcb-chat end -->
-        <div class="lcb-room-sidebar">
-            <div class="lcb-room-sidebar-group lcb-room-sidebar-users">
+        <div class="lcb-room-sidebar" >
+            <div class="lcb-room-sidebar-group lcb-room-sidebar-users" >
                 <header class="lcb-room-sidebar-header">
-                    <a class="btn btn-success btn-xs lcb-room-sidebar-invite-provider pull-right" data-toggle="modal" data-target="#lcb-find-providers" href="#!/find-providers">
-                        <i class="fa fa-plus"></i>
-                        <span>Invite</span>
-                    </a>
-                    <h3 class="lcb-room-sidebar-heading">
-                        <i class="fa fa-users"></i> Who&quot;s Here (<span class="lcb-room-sidebar-items-count"></span>)
+                    <h3 class="lcb-room-sidebar-heading" id="set_6">
+                        <i class="fa fa-users"></i> Who's Here (<span class="lcb-room-sidebar-items-count"></span>)
                     </h3>
                 </header>
                 <ul class="lcb-room-sidebar-list"></ul>
             </div>
             <% if settings.files.enable %>
-            <div class="lcb-room-sidebar-group lcb-room-sidebar-files">
+            <div class="lcb-room-sidebar-group lcb-room-sidebar-files" >
                 <header class="lcb-room-sidebar-header">
-                    <h3 class="lcb-room-sidebar-heading">
+                    <h3 class="lcb-room-sidebar-heading" id="set_7">
                         <i class="fa fa-file-text"></i> Files
                     </h3>
                     <button class="btn lcb-room-sidebar-files-add lcb-upload-trigger">
                         <i class="fa fa-plus"></i>
-                        <span>Attach File</span>
                     </button>
                 </header>
                 <ul class="lcb-room-sidebar-list"></ul>

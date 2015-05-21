@@ -100,7 +100,7 @@ module.exports = function() {
                     rooms = _.map(rooms, function(room) {
                         room = room.toJSON();
                         room.users = core.presence.getUsersForRoom(room.id.toString());
-                        room.userCount = room.users.length;
+                        room.userCount = room.users.length;console.log(room);
                         return room;
                     });
                 }

@@ -1,4 +1,3 @@
-//= require vendor/bootstrap-daterangepicker/daterangepicker.js
 //= require util/eggs.js
 //= require util/message.js
 //= require models.js
@@ -8,11 +7,8 @@
 //= require views/window.js
 //= require views/panes.js
 //= require views/modals.js
-//= require views/profilePictureModal.js
 //= require views/upload.js
 //= require views/client.js
-//= require views/chat-history.js
-//= require views/transcript.js
 //= require client.js
 
 $(function() {

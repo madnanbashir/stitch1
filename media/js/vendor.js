@@ -17,6 +17,6 @@
 //= require vendor/at/jquery.atwho.js
 //= require vendor/backbone.keys/backbone.keys.js
 //= require vendor/raptorize/jquery.raptorize.js
-//= require vendor/jquery-form/jquery.form.min.js
-//= require vendor/jcrop/jquery.Jcrop.min.js
+//= require vendor/bootstrap-tour-0.10.2/build/js/bootstrap-tour.js
 //= require common.js
+//= require custom_.js

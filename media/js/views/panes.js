@@ -60,9 +60,6 @@
             e.preventDefault();
             var id = $(e.currentTarget).closest('[data-id]').data('id');
             this.client.events.trigger('rooms:leave', id);
-            if ($('.lcb-room.lcb-pane').length === 0) {
-                $('.lcb-landing').removeClass('hide');
-            }
         },
         alert: function(message) {
             var $tab = this.$('.lcb-tab[data-id=' + message.room.id + ']'),
