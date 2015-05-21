@@ -11,6 +11,7 @@ var _ = require('lodash'),
     auth = require('./../auth/index'),
     path = require('path'),
     settings = require('./../config'),
+    cors = require('cors'),
     mailService = require('../emails/mailService');
 
 module.exports = function() {
@@ -98,54 +99,52 @@ module.exports = function() {
         }
     });
 
-    app.get('/get-started', function(req, res) {
-        crypto.randomBytes(20, function (err, buffer) {
-            if(err){
-                return callback(err);
-            }
-
-            var token = buffer.toString('hex');
-
-            core.account.create('local', {
-                email: req.query.email,
-                organizationName: req.query.organization,
-                organizationDomain: req.query.email.substr((req.query.email.indexOf("@") + 1)),
-                verificationToken: token,
-                isVerified: false,
-
-                provider: 'local',
-                username: 'username' + token,
-                password: 'password' + token,
-                firstName: 'firstName' + token,
-                lastName: 'lastName' + token,
-                displayName: 'displayName' + token,
-                position: 'position' + token
-            }, function (err, user) {
-                if(err){
-                    console.log(err);
-                    return res.sendStatus(504);
+    app.get('/get-started', cors(), function(req, res) {
+        if(req.query.email && req.query.organization) {
+            crypto.randomBytes(20, function (err, buffer) {
+                if (err) {
+                    return callback(err);
                 }
 
-                var mailConfig = {
-                    subject: 'Invitation to Stitch',
-                    receiver: {
-                        email: req.query.email
-                    },
-                    getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
-                    req.query.email + '&organization=' + req.query.organization
-                };
+                var token = buffer.toString('hex');
 
-                mailService.sendEmail('get-started', mailConfig);
+                core.account.create('local', {
+                    email: req.query.email,
+                    organizationName: req.query.organization,
+                    organizationDomain: req.query.email.substr((req.query.email.indexOf("@") + 1)),
+                    verificationToken: token,
+                    isVerified: false,
 
-                res.set({
-                    'content-type': 'application/json',
-                    'content-encoding': 'gzip'
-                }).send({
-                    result: 'success',
-                    msg: 'success'
+                    provider: 'local',
+                    username: 'username' + token,
+                    password: 'password' + token,
+                    firstName: 'firstName' + token,
+                    lastName: 'lastName' + token,
+                    displayName: 'displayName' + token,
+                    position: 'position' + token
+                }, function (err, user) {
+                    if (err) {
+                        console.log(err);
+                        return res.sendStatus(504);
+                    }
+
+                    var mailConfig = {
+                        subject: 'Invitation to Stitch',
+                        receiver: {
+                            email: req.query.email
+                        },
+                        getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
+                        req.query.email + '&organization=' + req.query.organization
+                    };
+
+                    mailService.sendEmail('get-started', mailConfig);
+
+                    res.sendStatus(200);
                 });
             });
-        });
+        } else {
+            res.sendStatus(404);
+        }
     });
 
     app.get('/verify-mail', function(req, res) {
@@ -196,16 +195,22 @@ module.exports = function() {
     //
     // Sockets
     //
+
+    var capitalizeFirstLetter = function(string) {
+           return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
     app.io.route('account', {
         whoami: function(req, res) {
             res.json(req.user);
         },
+
         profile: function(req, res) {
             var form = req.body || req.data,
                 data = {
-                    displayName: form.displayName || form['display-name'],
                     firstName: form.firstName || form['first-name'],
                     lastName: form.lastName || form['last-name'],
+                    displayName: firstName + " " + lastName,
                     position: form.position || form['position']
                 };
 
@@ -354,10 +359,10 @@ module.exports = function() {
                 email: fields.email,
                 password: fields.password,
                 verificationToken: fields.token,
-                firstName: fields.firstName || fields.firstname || fields['first-name'],
-                lastName: fields.lastName || fields.lastname || fields['last-name'],
-                displayName: fields.displayName || fields.displayname || fields['display-name'],
-                position: fields.position || fields.position || fields['position'],
+                firstName: capitalizeFirstLetter(fields.firstName || fields.firstname || fields['first-name']),
+                lastName: capitalizeFirstLetter(fields.lastName || fields.lastname || fields['last-name']),
+                displayName: capitalizeFirstLetter(fields.firstName || fields.firstname || fields['first-name']) + " " + capitalizeFirstLetter(fields.lastName || fields.lastname || fields['last-name']),
+                position: capitalizeFirstLetter(fields.position || fields.position || fields['position']),
                 organizationName: fields.organization,
                 organizationDomain: fields.email.substr((fields.email.indexOf("@") + 1))
             };
