@@ -40,6 +40,10 @@ var RoomSchema = new mongoose.Schema({
 		type: ObjectId,
 		ref: 'Message'
 	}],
+    users: [{
+        type: ObjectId,
+        ref: 'User'
+    }],
     created: {
         type: Date,
         default: Date.now

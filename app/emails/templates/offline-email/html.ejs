@@ -1,12 +1,13 @@
 <% include ../../common/views/header.ejs %>
 <h2>
-    Hi <%= receiver.displayName %>>,
+    Hi <%= receiver.displayName %>,
 </h2>
 
 <p>
-    You have direct messages waiting for you:
-    [X] from [Name]
-    [X] from [Name]
+    You have a direct message waiting for you:
+</p>
+<p>
+    <%= message %> from <%= senderName %>
 </p>
 <div class="btn-div">
     <a href="<%= loginUrl %>" class="myButton">
