@@ -89,7 +89,8 @@
             });
             this.addPatientModal = new window.LCB.AddPatientView({
                 el: this.$el.find('#lcb-add-room'),
-                client: this.client
+                client: this.client,
+                parentModal: this.findPatientsModal
             });
             this.chatHistoryModal = new window.LCB.ChatHistoryView({
                 el: this.$el.find('#lcb-chat-history'),

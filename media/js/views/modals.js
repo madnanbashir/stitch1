@@ -179,61 +179,55 @@
     window.LCB.FindPatientsView = window.LCB.ModalView.extend({
         events: {
             'keyup #lcb-rooms-browser-filter-input': 'filter',
-            'change .lcb-rooms-switch': 'toggle',
-            'click .lcb-rooms-switch-label': 'toggle'
+            'click .lcb-rooms-list-item-row': 'activateRoom'
         },
         initialize: function(options) {
             this.client = options.client;
             this.template = Handlebars.compile($('#template-room-browser-row').html());
-            this.userTemplate = Handlebars.compile($('#template-room-browser-item-user').html());
             this.rooms = options.rooms;
             this.rooms.on('add', this.add, this);
-            this.rooms.on('remove', this.remove, this);
-            this.rooms.on('change:description change:name', this.update, this);
+            this.rooms.on('remove', this.removeRoom, this);
+            this.rooms.on('change:name', this.update, this);
             this.rooms.on('change:lastActive', _.debounce(this.updateLastActive, 200), this);
-            this.rooms.on('change:joined', this.updateToggles, this);
-            this.rooms.on('users:add', this.addUser, this);
-            this.rooms.on('users:remove', this.removeUser, this);
-            this.rooms.on('users:add users:remove add remove', this.sort, this);
+            // this.rooms.on('change:joined', this.updateToggles, this);
             this.rooms.current.on('change:id', function(current, id) {
                 // We only care about the list pane
                 if (id !== 'list') return;
                 this.sort();
             }, this);
         },
-        updateToggles: function(room, joined) {
-            this.$('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
-        },
-        toggle: function(e) {
+        // updateToggles: function(room, joined) {
+        //     this.$('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
+        // },
+        activateRoom: function(e) {
             e.preventDefault();
-            var $target = $(e.currentTarget),
-                $input = $target.is(':checkbox') && $target || $target.siblings('[type="checkbox"]'),
-                id = $input.data('id'),
+            var $roomRow = $(e.currentTarget),
+                id = $roomRow.data('id'),
                 room = this.rooms.get(id);
             if (!room) {
                 return;
             }
-            (!$input.is(':checked') && this.client.joinRoom(room.id)) ||
-                (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
+            if(!this.rooms.get(room.id).get('joined')){
+                this.client.joinRoom(room.id);
+            }
         },
         add: function(room) {
             var room = room.toJSON ? room.toJSON() : room,
                 context = _.extend(room, {
-                    lastActive: moment(room.lastActive).calendar()
+                    lastActive: moment(room.lastActive).format('M/D/YYYY')
                 });
             this.$('.lcb-rooms-list-modal tbody').append(this.template(context));
         },
-        remove: function(room) {
+        removeRoom: function(room) {
             this.$('.lcb-rooms-list-item-row[data-id=' + room.id + ']').remove();
         },
         update: function(room) {
             this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-name-modal').text(room.get('name'));
-            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
         },
         updateLastActive: function(room) {
-            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
+            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).format('M/D/YYYY'));
         },
-        sort: function(model) {
+        sort: function(model) {//Eric.TODO, verify sort logic
             var that = this,
                 $items = this.$('.lcb-rooms-list-item-row');
             // We only care about other users
@@ -261,24 +255,32 @@
             var $input = $(e.currentTarget),
                 needle = $input.val().toLowerCase();
             this.$('.lcb-rooms-list-item-row').each(function () {
-                var haystack = $(this).find('.lcb-rooms-list-item-name-modal').text().toLowerCase();
-                $(this).toggle(haystack.indexOf(needle) >= 0);
+                var name = $(this).find('.lcb-rooms-list-item-name-modal').text().toLowerCase();
+                var mrn = $(this).find('.lcb-rooms-list-item-name-mrn').text().toLowerCase();
+                $(this).toggle(name.indexOf(needle) >= 0 || mrn.indexOf(needle) >= 0 );
             });
         },
-        addUser: function(user, room) {
-            this.$('.lcb-rooms-list-item-row[data-id="' + room.id + '"]')
-                .find('.lcb-rooms-list-users').prepend(this.userTemplate(user.toJSON()));
+        hide: function(){
+            this.$el.modal('hide');
         },
-        removeUser: function(user, room) {
-            this.$('.lcb-rooms-list-item-row[data-id="' + room.id + '"]')
-                .find('.lcb-rooms-list-user[data-id="' + user.id + '"]').remove();
-        }
+        show: function(){
+            this.$el.modal('show');
+        },
     });
 
     window.LCB.AddPatientView = window.LCB.ModalView.extend({
         initialize: function(options) {
-            this.client = options.client;
-            this.render();
+            var self = this;
+            self.client = options.client;
+            self.parentModal = options.parentModal;
+            self.render();
+
+            self.$el.on('show.bs.modal', function(){
+                self.parentModal.hide();
+            });
+            self.$el.on('hide.bs.modal', function(){
+                self.parentModal.show();
+            });
         },
         submit: function(e) {
             e.preventDefault();
@@ -326,20 +328,6 @@
                 self.client.getUsersSync();
             });
         },
-        // add: function(provider) {
-        //     var room = room.toJSON ? room.toJSON() : room,
-        //         context = _.extend(room, {
-        //             lastActive: moment(room.lastActive).calendar()
-        //         });
-        //     this.$('.lcb-rooms-list').append(this.template(context));
-        // },
-        /*        remove: function(room) {
-            this.$('.lcb-providers-list-item[data-id=' + room.id + ']').remove();
-        },
-        update: function(room) {
-            this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-name').text(room.get('name'));
-            this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-description').text(room.get('description'));
-        },*/
         render: function () {
             this.collection.each(this.add);
             return this;
