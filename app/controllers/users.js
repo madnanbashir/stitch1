@@ -43,7 +43,7 @@ module.exports = function() {
                 maxTake: 5000
             });
 
-            var find = User.find();
+            var find = User.find({organizationDomain: req.user.organizationDomain});
 
             if (options.skip) {
                 find.skip(options.skip);
