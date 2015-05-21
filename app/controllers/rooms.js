@@ -87,7 +87,8 @@ module.exports = function() {
         list: function(req, res) {
             var options = {
                     skip: req.param('skip'),
-                    take: req.param('take')
+                    take: req.param('take'),
+                    organizationDomain: req.user.organizationDomain
                 };
 
             core.rooms.list(options, function(err, rooms) {
