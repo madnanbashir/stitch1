@@ -283,21 +283,24 @@
             });
         },
         submit: function(e) {
+            var self = this;
             e.preventDefault();
-            var $modal = $('#lcb-add-room'),
-                $form = this.$(e.target),
-                $name = this.$('.lcb-room-name'),
-                $slug = this.$('.lcb-room-slug'),
+            var $modal = this.$el,
+                $form = self.$(e.target),
+                $name = self.$('.lcb-room-name'),
+                $slug = self.$('.lcb-room-slug'),
                 data = {
                     name: $name.val().trim(),
                     slug: $slug.val().trim(),
-                    description: this.$('.lcb-room-description').val(),
-                    callback: function success() {
-                        $modal.modal('hide');
-                        $('#lcb-find-patients').modal('hide');
-                        $form.trigger('reset');
+                    description: self.$('.lcb-room-description').val(),
+                    callback: function success(resp) {
+                        if(!resp.errors){
+                            $modal.off('hide.bs.modal'); //Avoid the parentModal display again
+                            $modal.modal('hide');
+                            $form.trigger('reset');
 
-                        swal('Patient Added!', 'The patient has been added.', 'success');
+                            swal('Patient Added!', 'The patient has been added.', 'success');
+                        }
                     }
                 };
 
