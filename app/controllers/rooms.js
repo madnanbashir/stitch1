@@ -140,6 +140,7 @@ module.exports = function() {
                     owner: req.user._id,
                     name: req.param('name'),
                     slug: req.param('slug'),
+                    organizationDomain: req.user.organizationDomain,
                     description: req.param('description')
                 };
 

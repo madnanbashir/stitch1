@@ -51,6 +51,10 @@ var RoomSchema = new mongoose.Schema({
     lastActive: {
         type: Date,
         default: Date.now
+    },
+    organizationDomain: {
+        type: String,
+        required: true
     }
 });
 
