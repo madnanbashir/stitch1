@@ -19,4 +19,3 @@
 //= require vendor/raptorize/jquery.raptorize.js
 //= require vendor/bootstrap-tour-0.10.2/build/js/bootstrap-tour.js
 //= require common.js
-//= require custom_.js
