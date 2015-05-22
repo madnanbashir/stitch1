@@ -365,7 +365,7 @@ module.exports = function() {
                 organizationDomain: fields.email.substr((fields.email.indexOf("@") + 1))
             };
 
-<<<<<<< HEAD
+
             getUserVerification(data, req.headers.host, function (err, data) {
 
                 core.account.create('local', data, function(err, user) {
