@@ -2,7 +2,9 @@
 
 var _ = require('lodash'),
     mongoose = require('mongoose'),
-    helpers = require('./helpers');
+    helpers = require('./helpers'),
+    mailService = require('../emails/mailService'),
+    thisHost = 'localhost:5000';
 
 function MessageManager(options) {
     this.core = options.core;
@@ -40,6 +42,10 @@ MessageManager.prototype.create = function(options, cb) {
                 }
                 typeof cb === 'function' && cb(null, message, room, user);
                 this.core.emit('messages:new', message, room, user);
+
+                this.emailNotifyOfflineUsers(room, message, user, function (err) {
+                    if (err) console.error(err);
+                });
             }.bind(this));
         }.bind(this));
     }.bind(this));
@@ -113,6 +119,28 @@ MessageManager.prototype.list = function(options, cb) {
             }
             cb(null, messages);
         });
+};
+
+MessageManager.prototype.emailNotifyOfflineUsers = function(room, message, sender, cb){
+    this.core.presence.rooms.getOrAdd(room._id, room.slug).getOfflineUsers(function (err, offlineUsers) {
+        if(err){
+            return cb(err);
+        }
+
+        offlineUsers.forEach(function (offlineUser) {
+            var mailConfig = {
+                subject: sender.displayName + ' has sent you a direct message on Stitch',
+                receiver: offlineUser,
+                loginUrl: 'http://' + thisHost + '/login',
+                senderName: sender.displayName,
+                message: message.text
+            };
+
+            mailService.sendEmail('offline-email', mailConfig);
+        });
+
+        cb(null);
+    });
 };
 
 module.exports = MessageManager;

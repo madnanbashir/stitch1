@@ -92,7 +92,10 @@ RoomManager.prototype.list = function(options, cb) {
 
     var Room = mongoose.model('Room');
 
-    var find = Room.find({ archived: { $ne: true }});
+    var find = Room.find({
+        organizationDomain: options.organizationDomain,
+        archived: { $ne: true }
+    });
 
     if (options.skip) {
         find.skip(options.skip);
