@@ -9,7 +9,7 @@ body, html {
 
 .lcb-sidebar {
 	background: @dark_blue;
-	padding: 10px 0 0 15px;
+	padding: 10px 0 150px 15px;
 	width: 230px;
 
 	@media (max-width: @phone-size) {
@@ -298,4 +298,13 @@ table.table-hover{
       }
     }
   }
+}
+//mimic the style of lcb-tabs
+.lcb-tabs-header-wrapper{
+    padding: 0px;
+    margin: 0px;
+}
+.lcb-sidebar-patient-list-wrapper{
+    height:100%;
+    overflow-y:auto;
 }
