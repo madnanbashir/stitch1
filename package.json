@@ -88,9 +88,10 @@
     "require-tree": "~0.3.3"
   },
   "devDependencies": {
+    "eslint": "^0.21.2",
     "grunt": "~0.4.5",
     "grunt-bower": "~0.16.0",
     "grunt-bower-task": "~0.4.0",
-    "eslint": "^0.21.2"
+    "tether-shepherd": "^1.0.1"
   }
 }
