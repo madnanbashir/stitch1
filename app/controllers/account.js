@@ -210,7 +210,7 @@ module.exports = function() {
                 data = {
                     firstName: form.firstName || form['first-name'],
                     lastName: form.lastName || form['last-name'],
-                    displayName: firstName + " " + lastName,
+                    displayName: form.displayName || form['display-name'],
                     position: form.position || form['position']
                 };
 
