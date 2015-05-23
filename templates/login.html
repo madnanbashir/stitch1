@@ -66,11 +66,47 @@
                             <input class="required form-control" name="last-name" type="text" placeholder="Last Name" maxlength="24" />
                         </div>
                     </div>
-                     <div class="form-group">
-                        <input class="required form-control" name="position" type="text" placeholder="Title" maxlength="50" />
-                    </div>
                     <div class="form-group">
                         <input class="required form-control" name="organization" type="text" placeholder="Organization" />
+                    </div>
+                    <div class="form-group">
+                        <select class="required form-control" name="position">
+                          <option value="" selected disabled>Degree</option>
+                          <optgroup label="Doctor">
+                            <option value="PGY1">PGY1</option>
+                            <option value="PGY2">PGY2</option>
+                            <option value="PGY3">PGY3</option>
+                            <option value="Fellow">Fellow</option>
+                            <option value="DO">DO</option>
+                            <option value="MD">MD</option>
+                          </optgroup>
+                          <optgroup label="Nurse">
+                            <option value="CNA">CNA</option>
+                            <option value="CNM">CNM</option>
+                            <option value="CNS">CNS</option>
+                            <option value="CRNA">CRNA</option>
+                            <option value="LPN">LPN</option>
+                            <option value="NP">NP</option>
+                            <option value="RN">RN</option>
+                          </optgroup>
+                          <optgroup label="Other Clinical">
+                            <option value="Behavioral Therapist">Behavioral Specialist</option>
+                            <option value="Case Manager">Case Manager</option>
+                            <option value="Medical Scribe">Medical Scribe</option>
+                            <option value="Medical Student">Medical Student</option>
+                            <option value="PA">PA</option>
+                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
+                            <option value="PharmD">PharmD</option>
+                            <option value="PsyD">Psychiatrist</option>
+                            <option value="Social Worker">Social Worker</option>
+                          </optgroup>
+                          <optgroup label="Non-Clinical">
+                            <option value="Admin">Admin</option>
+                            <option value="Front Desk">Front Desk</option>
+                            <option value="Referrals">Referrals</option>
+                          </optgroup>
+                          <option value>
+                        </select>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-9">

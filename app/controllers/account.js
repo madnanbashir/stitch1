@@ -362,7 +362,7 @@ module.exports = function() {
                 firstName: capitalizeFirstLetter(fields.firstName || fields.firstname || fields['first-name']),
                 lastName: capitalizeFirstLetter(fields.lastName || fields.lastname || fields['last-name']),
                 displayName: capitalizeFirstLetter(fields.firstName || fields.firstname || fields['first-name']) + " " + capitalizeFirstLetter(fields.lastName || fields.lastname || fields['last-name']),
-                position: capitalizeFirstLetter(fields.position || fields.position || fields['position']),
+                position: fields.position,
                 organizationName: fields.organization,
                 organizationDomain: fields.email.substr((fields.email.indexOf("@") + 1))
             };
