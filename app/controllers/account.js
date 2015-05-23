@@ -12,7 +12,7 @@ var _ = require('lodash'),
     path = require('path'),
     settings = require('./../config'),
     cors = require('cors'),
-    mailService = require('../emails/mailService');
+    mandrillService = require('../emails/mandrillService');
 
 module.exports = function() {
 
@@ -47,16 +47,28 @@ module.exports = function() {
             verifyUser(req.query.email, req.query.token, function (err, verificationMessage, user) {
 
                 if(verificationMessage.isVerified) {
-                    var mailConfig = {
+                    var templateName = 'sign-up-2-confirmation';
+
+                    var message = {
                         subject: 'You’re all set up!',
-                        receiver: {
+                        to: [{
                             email: user.email
-                        },
-                        inviteTeamUrl: 'http://' + req.headers.host + '/login',
-                        organizationName: user.organizationName
+                        }],
+                        merge: true,
+                        merge_language: 'mailchimp',
+                        global_merge_vars: [
+                            {
+                                name: 'inviteTeamUrl',
+                                content: 'http://' + req.headers.host + '/login'
+                            },
+                            {
+                                name: 'organizationName',
+                                content: user.organizationName
+                            }
+                        ]
                     };
 
-                    mailService.sendEmail('confirmation', mailConfig);
+                    mandrillService.sendEmail(templateName, [], message, function(){});
                 }
 
                 res.render('login.html',{
@@ -128,16 +140,25 @@ module.exports = function() {
                         return res.sendStatus(504);
                     }
 
-                    var mailConfig = {
+                    var templateName = 'sign-up-1-get-started';
+
+                    var message = {
                         subject: 'Invitation to Stitch',
-                        receiver: {
+                        to: [{
                             email: req.query.email
-                        },
-                        getStartedUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
-                        req.query.email + '&organization=' + req.query.organization
+                        }],
+                        merge: true,
+                        merge_language: 'mailchimp',
+                        global_merge_vars: [
+                            {
+                                name: 'getStartedUrl',
+                                content: 'http://' + req.headers.host + '/register?token=' + token + '&email=' +
+                                    req.query.email + '&organization=' + req.query.organization
+                            }
+                        ]
                     };
 
-                    mailService.sendEmail('get-started', mailConfig);
+                    mandrillService.sendEmail(templateName, [], message, function(){});
 
                     res.sendStatus(200);
                 });
@@ -394,16 +415,28 @@ module.exports = function() {
 
                     if(data.isVerified){
 
-                        var mailConfig = {
+                        var templateName = 'sign-up-2-confirmation';
+
+                        var message = {
                             subject: 'You’re all set up!',
-                            receiver: {
+                            to: [{
                                 email: data.email
-                            },
-                            inviteTeamUrl: 'http://' + req.headers.host + '/login',
-                            organizationName: data.organizationName
+                            }],
+                            merge: true,
+                            merge_language: 'mailchimp',
+                            global_merge_vars: [
+                                {
+                                    name: 'inviteTeamUrl',
+                                    content: 'http://' + req.headers.host + '/login'
+                                },
+                                {
+                                    name: 'organizationName',
+                                    content: data.organizationName
+                                }
+                            ]
                         };
 
-                        mailService.sendEmail('confirmation', mailConfig);
+                        mandrillService.sendEmail(templateName, [], message, function(){});
 
                         return res.status(201).json({
                             status: 'success',
@@ -523,15 +556,24 @@ module.exports = function() {
 
                     var token = buffer.toString('hex');
 
-                    var mailConfig = {
+                    var templateName = 'sign-up-1-authenticate';
+
+                    var message = {
                         subject: 'Invitation to Stitch',
-                        receiver: {
+                        to: [{
                             email: data.email
-                        },
-                        confirmAccountUrl: 'http://' + thisHost + '/login?token=' + token + '&email=' + data.email
+                        }],
+                        merge: true,
+                        merge_language: 'mailchimp',
+                        global_merge_vars: [
+                            {
+                                name: 'confirmAccountUrl',
+                                content: 'http://' + thisHost + '/login?token=' + token + '&email=' + data.email
+                            }
+                        ]
                     };
 
-                    mailService.sendEmail('authentication', mailConfig);
+                    mandrillService.sendEmail(templateName, [], message, function(){});
 
                     data.verificationToken = token;
                     data.isVerified = false;
