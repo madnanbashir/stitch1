@@ -191,7 +191,9 @@ module.exports = function() {
     app.post('/account/token/revoke', middlewares.requireLogin, function(req, res) {
         req.io.route('account:revoke_token');
     });
-
+	app.post('/account/updateUserState', middlewares.requireLogin, function(req, res) {
+        req.io.route('account:updateUserState');
+    });
     //
     // Sockets
     //
@@ -229,6 +231,25 @@ module.exports = function() {
 
                 res.json(user);
             });
+        },
+		updateUserState: function(req, res) {
+
+			var form = req.body || req.data;
+			var user_state = req.user.newUser;
+			user_state[form.tour_page] = 0;
+			var data = {newUser: user_state};
+			core.account.update(req.user._id, data, function (err, user, reason) {
+				if (err || !user) {
+					return res.status(400).json({
+						status: 'error',
+						message: 'Unable to update your account.',
+						reason: reason,
+						errors: err
+					});
+				}
+				console.log(user);
+				res.json(user);
+			});
         },
         settings: function(req, res) {
             if (req.user.using_token) {
@@ -364,7 +385,8 @@ module.exports = function() {
                 displayName: capitalizeFirstLetter(fields.firstName || fields.firstname || fields['first-name']) + " " + capitalizeFirstLetter(fields.lastName || fields.lastname || fields['last-name']),
                 position: capitalizeFirstLetter(fields.position || fields.position || fields['position']),
                 organizationName: fields.organization,
-                organizationDomain: fields.email.substr((fields.email.indexOf("@") + 1))
+                organizationDomain: fields.email.substr((fields.email.indexOf("@") + 1)),
+				newUser: {login_tour: '1', chat_tour: '1'}
             };
 
             getUserVerification(data, req.headers.host, function (err, data) {

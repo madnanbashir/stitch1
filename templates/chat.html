@@ -21,6 +21,7 @@
 <% endblock %>
 
 <% block body %>
+	<input type="hidden" class="txt_start_tour" value="<$ account.newUser.chat_tour $>" />
     <div id="lcb-client" class="lcb-client">
         <div class="lcb-header">
             <button type="button" class="btn lcb-header-toggle">
@@ -28,7 +29,7 @@
             </button>
             <div class="lcb-header-logo">Stitch</div>
         </div>
-        <section class="lcb-sidebar">
+        <section class="lcb-sidebar" id="set_1">
             <div class="dropdown">
                 <a class="lcb-account-button dropdown-toggle" data-toggle="dropdown" href="3">
                     <img class="lcb-account-button-avatar lcb-avatar profile-pic" src="/getProfilePicture" />
@@ -72,7 +73,7 @@
                 <span class="lcb-status-indicator lcb-status-indicator-error lcb-status-connection" data-status="disconnected" style="display: none;">
                     <i class="fa fa-plug"></i> Disconnected
                 </span>
-                <span class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
+                <span id="set_3" class="lcb-status-indicator lcb-status-connection" data-status="connected" style="display: none;">
                     <i class="fa fa-refresh"></i> Connected
                 </span>
                 <span class="lcb-status-indicator lcb-status-connection" style="display: none;">
@@ -80,7 +81,7 @@
                 </span>
             </div>
             <ul class="lcb-tabs">
-                <li data-id="list" class="lcb-tab lcb-tab-home">
+                <li data-id="list" class="lcb-tab lcb-tab-home" id="set_2">
                     <i class="fa fa-th"></i><span> Patients</span>
                 </li>
             </ul>
@@ -96,13 +97,13 @@
                    <h2 class="lcb-rooms-browser-heading">
                        Patient Rooms
                    </h2>
-                   <div class="lcb-rooms-browser-filter">
+                   <div class="lcb-rooms-browser-filter" id="set_5">
                        <label class="lcb-rooms-browser-filter-label" for="lcb-rooms-browser-filter-input">
                            <i class="fa fa-search"></i>
                        </label>
                        <input id="lcb-rooms-browser-filter-input" class="lcb-rooms-browser-filter-input" type="search" autofocus />
                    </div>
-                   <a class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
+                   <a id="set_4" class="btn btn-success lcb-rooms-browser-new" data-toggle="modal" data-target="#lcb-add-room" href="#!/rooms/add">
                        <i class="fa fa-plus"></i>
                        <span>Add Patient</span>
                    </a>

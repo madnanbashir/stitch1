@@ -252,19 +252,19 @@ mongoose.connect(settings.database.uri, function(err) {
     }
 
     checkForMongoTextSearch();
+startApp();
+    // migroose.needsMigration(function(migrationRequired) {
+        // if (migrationRequired) {
+            // console.log('Database migration required'.red);
+            // console.log('Ensure you backup your database first.');
+            // console.log('');
+            // console.log(
+                // 'Run the following command: ' + 'npm run migrate'.yellow
+            // );
 
-    migroose.needsMigration(function(migrationRequired) {
-        if (migrationRequired) {
-            console.log('Database migration required'.red);
-            console.log('Ensure you backup your database first.');
-            console.log('');
-            console.log(
-                'Run the following command: ' + 'npm run migrate'.yellow
-            );
+            // return process.exit();
+        // }
 
-            return process.exit();
-        }
-
-        startApp();
-    });
+        // startApp();
+    // });
 });

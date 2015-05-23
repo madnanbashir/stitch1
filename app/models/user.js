@@ -124,7 +124,10 @@ var UserSchema = new mongoose.Schema({
 	messages: [{
 		type: ObjectId,
 		ref: 'Message'
-	}]
+	}],
+	newUser: {
+        type: JSON
+    }
 }, {
     toObject: {
         virtuals: true

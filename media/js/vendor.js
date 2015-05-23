@@ -19,4 +19,5 @@
 //= require vendor/raptorize/jquery.raptorize.js
 //= require vendor/jquery-form/jquery.form.min.js
 //= require vendor/jcrop/jquery.Jcrop.min.js
+//= require vendor/bootstrap-tour-0.10.2/build/js/bootstrap-tour.js
 //= require common.js
