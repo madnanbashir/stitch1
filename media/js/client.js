@@ -118,7 +118,7 @@
                      'error');
             }
         });
-    }
+    };
     Client.prototype.roomArchive = function(room) {
         this.leaveRoom(room.id);
         this.rooms.remove(room.id);
@@ -435,6 +435,12 @@
             timeout: 3000
         });
         this.socket.on('connect', function() {
+
+            var invitationRoomUrl = $('#invitationRoomUrl').val();
+            if(invitationRoomUrl){
+                window.location.href = invitationRoomUrl;
+            }
+            //console.log();
             that.getUser();
             that.getRooms(joinRooms);
             that.status.set('connected', true);

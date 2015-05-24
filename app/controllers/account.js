@@ -30,10 +30,40 @@ module.exports = function() {
     // Routes
     //
     app.get('/', middlewares.requireLogin.redirect, function(req, res) {
-        res.render('chat.html', {
-            account: req.user,
-            settings: settings
-        });
+
+        if(req.user.invitationRoomId){
+            var invitationRoomUrl = '#!/room/' + req.user.invitationRoomId;
+
+            var options = {
+                owner: req.user.inviterId,
+                room: req.user.invitationRoomId,
+                text: req.user.invitationMessage
+            };
+
+            core.messages.create(options, function(err, message) {
+                if (err) {
+                    return res.sendStatus(400);
+                }
+
+                User.update({_id: req.user._id}, {$unset: {inviterId: 1,invitationRoomId: 1,invitationMessage: 1 }}, function (err) {
+                    if(err){
+                        console.log(err);
+                        return res.status(500).send(err);
+                    }
+
+                    res.render('chat.html', {
+                        account: req.user,
+                        settings: settings,
+                        invitationRoomUrl: invitationRoomUrl
+                    });
+                });
+            });
+        } else {
+            res.render('chat.html', {
+                account: req.user,
+                settings: settings
+            });
+        }
     });
 
     app.get('/login', function(req, res) {
@@ -546,7 +576,10 @@ module.exports = function() {
 
             if (user && user.isVerified) {
                 data.isVerified = true;
-
+                if(user.invitationRoomId)
+                data.invitationRoomId = user.invitationRoomId;
+                data.invitationMessage = user.invitationMessage;
+                data.inviterId = user.inviterId;
                 return callback(null, data);
             } else {
                 crypto.randomBytes(20, function (err, buffer) {
