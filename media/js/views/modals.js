@@ -459,10 +459,14 @@
                     'invitationRoomId': this.client.rooms.current.get('id')
                 },
                 success: function(res){
+                    if(res.error){
+                        swal("Oops...", res.error.message, "error");
+                    } else {
+                        swal("Success!", "An invitation email was sent to your colleague!", "success");
+                    }
                     $('#lcb-invite-new-provider-email').val('');
                     $('#lcb-invite-new-provider-message').val('');
                     self.$el.modal('hide');
-                    swal("Success!", "An invitation email was sent to your colleague!", "success");
                 }
             });
         }
