@@ -40,6 +40,10 @@ var RoomSchema = new mongoose.Schema({
 		type: ObjectId,
 		ref: 'Message'
 	}],
+    users: [{
+        type: ObjectId,
+        ref: 'User'
+    }],
     created: {
         type: Date,
         default: Date.now
@@ -47,6 +51,10 @@ var RoomSchema = new mongoose.Schema({
     lastActive: {
         type: Date,
         default: Date.now
+    },
+    organizationDomain: {
+        type: String,
+        required: true
     }
 });
 

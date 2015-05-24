@@ -44,15 +44,21 @@ PresenceManager.prototype.disconnect = function(connection) {
     this.rooms.removeConnection(connection);
 };
 
-PresenceManager.prototype.join = function(connection, roomId, roomSlug) {
+PresenceManager.prototype.join = function(connection, roomId, roomSlug, userId) {
     var room = this.rooms.getOrAdd(roomId, roomSlug);
     room.addConnection(connection);
+    room.addUser(roomId, userId, function (err) {
+        if(err) console.log(err);
+    });
 };
 
-PresenceManager.prototype.leave = function(connection, roomId) {
+PresenceManager.prototype.leave = function(connection, roomId, userId) {
     var room = this.rooms.get(roomId);
     if (room) {
         room.removeConnection(connection);
+        room.removeUser(roomId, userId, function (err) {
+            if(err) console.log(err);
+        });
     }
 };
 

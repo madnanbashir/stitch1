@@ -3,7 +3,8 @@
 var EventEmitter = require('events').EventEmitter,
     util = require('util'),
     _ = require('lodash'),
-    ConnectionCollection = require('./connection-collection');
+    ConnectionCollection = require('./connection-collection'),
+    mongoose = require('mongoose');
 
 function Room(roomId, roomSlug) {
     EventEmitter.call(this);
@@ -35,6 +36,45 @@ Room.prototype.getUserIds = function() {
 
 Room.prototype.getUsernames = function() {
     return this.connections.getUsernames();
+};
+
+Room.prototype.getOfflineUsers = function(cb) {
+    var onlineUsers = this.connections.getUserIds();
+
+    var Room = mongoose.model('Room');
+    Room.findOne({ _id: this.roomId })
+        .populate('users')
+        .exec(function(err, room) {
+            if (err) {
+                return cb(err);
+            }
+
+            var allUsers = room.users;
+            var offlineUserIds = _.map(allUsers, function(user) {
+                return user._id.toString();
+            });
+
+            for(var i = 0; i < onlineUsers.length; i++)
+            {
+                //remove online user from offline users
+                var index = offlineUserIds.indexOf(onlineUsers[i]);
+                if (index > -1) {
+                    offlineUserIds.splice(index, 1);
+                }
+            }
+
+            var offlineUsers = [];
+            for(var i = 0; i < allUsers.length; i++)
+            {
+                //remove online user from offline users
+                var index = offlineUserIds.indexOf(allUsers[i]._id.toString());
+                if (index > -1) {
+                    offlineUsers.push(allUsers[i]);
+                }
+            }
+
+            cb(null, offlineUsers);
+        });
 };
 
 Room.prototype.containsUser = function(userId) {
@@ -109,6 +149,35 @@ Room.prototype.removeConnection = function(connection) {
             });
         }
     }
+};
+
+
+Room.prototype.addUser = function(id, userId, cb) {
+    var Room = mongoose.model('Room');
+
+    Room.update(
+        { _id: id },
+        { $addToSet: { users: userId } },function (err) {
+            if(err){
+                return cb(err);
+            }
+            cb(null);
+        }
+    );
+};
+
+Room.prototype.removeUser = function(id, userId, cb) {
+    var Room = mongoose.model('Room');
+
+    Room.update(
+        { _id: id },
+        { $pull: { users: userId } },function (err) {
+            if(err){
+                return cb(err);
+            }
+            cb(null);
+        }
+    );
 };
 
 module.exports = Room;

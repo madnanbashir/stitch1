@@ -87,7 +87,8 @@ module.exports = function() {
         list: function(req, res) {
             var options = {
                     skip: req.param('skip'),
-                    take: req.param('take')
+                    take: req.param('take'),
+                    organizationDomain: req.user.organizationDomain
                 };
 
             core.rooms.list(options, function(err, rooms) {
@@ -140,6 +141,7 @@ module.exports = function() {
                     owner: req.user._id,
                     name: req.param('name'),
                     slug: req.param('slug'),
+                    organizationDomain: req.user.organizationDomain,
                     description: req.param('description')
                 };
 
@@ -205,7 +207,7 @@ module.exports = function() {
                 var user = req.user.toJSON();
                 user.room = room._id;
 
-                core.presence.join(req.socket.conn, room._id, room.slug);
+                core.presence.join(req.socket.conn, room._id, room.slug, req.user._id);
                 req.socket.join(room._id);
                 res.json(room.toJSON());
             });
@@ -215,7 +217,7 @@ module.exports = function() {
             var user = req.user.toJSON();
             user.room = roomId;
 
-            core.presence.leave(req.socket.conn, roomId);
+            core.presence.leave(req.socket.conn, roomId, req.user._id);
             req.socket.leave(roomId);
             res.json();
         },

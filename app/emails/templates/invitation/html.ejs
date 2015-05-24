@@ -3,25 +3,29 @@
     You're invited
 </h2>
 
-<div class="mail-text">
+<p>
     <%= inviterName %> has started using Stitch at <%= inviterOrg %> — and you've been invited to join the team!
-</div>
-<div style="text-align: center">
+</p>
+<div class="btn-div">
     <a href="<%= joinTeamUrl %>" class="myButton">
         Join the team
     </a>
 </div>
-<div class="mail-hint">
+<p style="text-align: center">
     Your sign-in email is: <%= receiver.email %>
-</div>
-<div class="mail-text">
+</p>
+<p>
     Haven't heard of Stitch? It's a popular team communication platform for medical providers. Team members can send messages and files into shared channels of communication about specific patients, or communicate privately with one another. Everything is instantly searchable, across any device, and 100% HIPAA-compliant.
-
+</p>
+<p>
     You might want to check out the product tour for more information.
-
+</p>
+<p>
     If you need anything, we can help. Reply to this email or send a new one to us by clicking here. We're online 7 days a week and love to hear from you :)
-
+</p>
+<p>
     See you inside!
+    <br />
     -- Team Stitch
-</div>
+</p>
 <% include ../../common/views/footer.ejs %>

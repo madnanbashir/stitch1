@@ -98,10 +98,12 @@ module.exports = function() {
                     // and pipe it to Express' response
                     .pipe(res);
             } else {
-                // console.log('path.resolve', req.user.defaultAvatar);
-                var readStream = fs.createReadStream(path.resolve('media/profile_icons/', req.user.defaultAvatar || 'User-blue-icon.png'));
-                // We replaced all the event handlers with a simple call to readStream.pipe()
-                readStream.pipe(res);
+                var User = mongoose.model('User');
+                User.findOne({ username: username }, function (err, user) {
+                    if (err) return res.status(500).send(err);
+                    var readStream = fs.createReadStream(path.resolve('media/profile_icons/', user.defaultAvatar || 'User-blue-icon.png'));
+                    readStream.pipe(res);
+                });
             }
         });
     })
