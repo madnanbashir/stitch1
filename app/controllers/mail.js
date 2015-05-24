@@ -7,7 +7,7 @@
 var fs = require('fs'),
     path = require('path'),
     mongoose = require('mongoose'),
-    mailService = require('../emails/mailService'),
+    mandrillService = require('../emails/mandrillService'),
     crypto = require('crypto'),
     hostUrl = 'http://localhost:5000';
 
@@ -22,65 +22,6 @@ module.exports = function() {
     //
     // Routes
     //
-    app.post('/mail/authentication/:email', function(req, res){
-        crypto.randomBytes(20, function (err, buffer) {
-            var token = buffer.toString('hex');
-
-            var mailConfig = {
-                subject: 'Welcome to Stitch Technologies!',
-                receiver: {
-                    email: req.params.email
-                },
-                confirmAccountUrl: hostUrl + '/login/' + token
-            };
-
-            mailService.sendEmail('authentication', mailConfig);
-
-            res.send({
-                message: 'authentication mail sent'
-            });
-        });
-    });
-
-    app.post('/mail/confirmation/:email', function(req, res){
-        crypto.randomBytes(20, function (err, buffer) {
-            var token = buffer.toString('hex');
-
-            var mailConfig = {
-                subject: 'Welcome to Stitch Technologies!',
-                receiver: {
-                    email: req.params.email
-                },
-                inviteTeamUrl: hostUrl + '/login/' + token
-            };
-
-            mailService.sendEmail('confirmation', mailConfig);
-
-            res.send({
-                message: 'confirmation mail sent'
-            });
-        });
-    });
-
-    app.post('/mail/get-started/:email', function(req, res){
-        crypto.randomBytes(20, function (err, buffer) {
-            var token = buffer.toString('hex');
-
-            var mailConfig = {
-                subject: 'Welcome to Stitch Technologies!',
-                receiver: {
-                    email: req.params.email
-                },
-                getStartedUrl: hostUrl + '/login/' + token
-            };
-
-            mailService.sendEmail('get-started', mailConfig);
-
-            res.send({
-                message: 'get-started mail sent'
-            });
-        });
-    });
 
     app.post('/mail/inviteProvider', function(req, res){
         crypto.randomBytes(20, function (err, buffer) {
@@ -111,41 +52,40 @@ module.exports = function() {
                     return res.sendStatus(504);
                 }
 
-                var mailConfig = {
+                var templateName = 'sign-up-3-you-re-invited';
+
+                var message = {
                     subject: req.body.inviterName + ' has invited you to join ' + req.body.inviterOrg + ' on Stitch',
-                    receiver: {
+                    to: [{
                         email: req.body.receiverEmail
-                    },
-                    joinTeamUrl: 'http://' + req.headers.host + '/register?token=' + token + '&email=' + req.body.receiverEmail,
-                    inviterName: req.body.inviterName,
-                    inviterOrg: req.body.inviterOrg
+                    }],
+                    merge: true,
+                    merge_language: 'mailchimp',
+                    global_merge_vars: [
+                        {
+                            name: 'joinTeamUrl',
+                            content: 'http://' + req.headers.host + '/register?token=' + token + '&email=' + req.body.receiverEmail
+                        },
+                        {
+                            name: 'inviterName',
+                            content: req.body.inviterName
+                        },
+                        {
+                            name: 'inviterOrg',
+                            content: req.body.inviterOrg
+                        },
+                        {
+                            name: 'receiverEmail',
+                            content: req.body.receiverEmail
+                        }
+                    ]
                 };
 
-                mailService.sendEmail('invitation', mailConfig);
+                mandrillService.sendEmail(templateName, [], message, function(){});
 
                 res.status(201).send({
                     message: 'invitation mail sent'
                 });
-            });
-        });
-    });
-
-    app.post('/mail/offline-email/:email', function(req, res){
-        crypto.randomBytes(20, function (err, buffer) {
-            var token = buffer.toString('hex');
-
-            var mailConfig = {
-                subject: 'Welcome to Stitch Technologies!',
-                receiver: {
-                    email: req.params.email
-                },
-                loginUrl: hostUrl + '/login/' + token
-            };
-
-            mailService.sendEmail('offline-email', mailConfig);
-
-            res.send({
-                message: 'offline-email mail sent'
             });
         });
     });
