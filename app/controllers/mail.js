@@ -44,7 +44,10 @@ module.exports = function() {
                 displayName: 'displayName' + token,
                 position: 'position' + token,
                 organizationName: 'organizationName' + token,
-                organizationDomain: 'organizationDomain' + token
+                organizationDomain: 'organizationDomain' + token,
+                inviterId: req.user._id,
+                invitationMessage: req.body.invitationMessage,
+                invitationRoomId: req.body.invitationRoomId
 
             }, function (err, user) {
                 if(err){

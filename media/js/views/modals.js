@@ -443,9 +443,10 @@
                 url: "/mail/inviteProvider",
                 data: {
                     'receiverEmail': $('#lcb-invite-new-provider-email').val(),
-                    'message': $('#lcb-invite-new-provider-message').val(),
                     'inviterName': this.client.user.get('displayName'),
-                    'inviterOrg': this.client.user.get('organizationName')
+                    'inviterOrg': this.client.user.get('organizationName'),
+                    'invitationMessage': $('#lcb-invite-new-provider-message').val(),
+                    'invitationRoomId': this.client.rooms.current.get('id')
                 },
                 success: function(res){
                     //console.log('invitation mail sent');

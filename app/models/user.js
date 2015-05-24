@@ -117,6 +117,18 @@ var UserSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    inviterId: {
+        type: ObjectId,
+        ref: 'User'
+    },
+    invitationMessage: {
+        type: String,
+        trim: true
+    },
+    invitationRoomId: {
+        type: ObjectId,
+        ref: 'Room'
+    },
     rooms: [{
 		type: ObjectId,
 		ref: 'Room'
