@@ -576,7 +576,10 @@ module.exports = function() {
 
             if (user && user.isVerified) {
                 data.isVerified = true;
-
+                if(user.invitationRoomId)
+                data.invitationRoomId = user.invitationRoomId;
+                data.invitationMessage = user.invitationMessage;
+                data.inviterId = user.inviterId;
                 return callback(null, data);
             } else {
                 crypto.randomBytes(20, function (err, buffer) {
