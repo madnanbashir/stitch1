@@ -89,9 +89,13 @@ module.exports = function() {
             }
 
             var token = buffer.toString('hex');
+            var email = req.body.receiverEmail;
+
+            //Pefill organizationDomain, we can extract it from email
+            var organizationDomain = email ? email.replace(/.*@/,'') : email;
 
             core.account.create('local', {
-                email: req.body.receiverEmail,
+                email: email,
                 verificationToken: token,
                 isVerified: false,
 
@@ -103,7 +107,7 @@ module.exports = function() {
                 displayName: 'displayName' + token,
                 position: 'position' + token,
                 organizationName: 'organizationName' + token,
-                organizationDomain: 'organizationDomain' + token
+                organizationDomain: organizationDomain
 
             }, function (err, user) {
                 if(err){
