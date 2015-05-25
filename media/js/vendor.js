@@ -7,6 +7,7 @@
 //= require vendor/moment/moment.js
 //= require vendor/handlebars/handlebars.js
 //= require vendor/bootstrap/bootstrap.js
+//= require vendor/bootstrap-tour/bootstrap-tour.js
 //= require vendor/store.js/store.js
 //= require vendor/JVFloat/jvfloat.js
 //= require vendor/dropzone/dropzone.js

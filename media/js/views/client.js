@@ -106,6 +106,12 @@
                 parentModal: this.findProvidersModal
             });
 
+            // Tour
+            this.tourView = new window.LCB.TourView({
+                el: this.$el,
+                client: this.client
+            });
+
             //
             // Misc
             //

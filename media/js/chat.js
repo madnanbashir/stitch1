@@ -13,11 +13,12 @@
 //= require views/client.js
 //= require views/chat-history.js
 //= require views/transcript.js
+//= require views/tour.js
 //= require client.js
 
 $(function() {
-    window.client = new window.LCB.Client({
-        filesEnabled: $('#lcb-upload').length > 0
-    });
-    window.client.start();
+  window.client = new window.LCB.Client({
+    filesEnabled: $('#lcb-upload').length > 0
+  });
+  window.client.start();
 });
