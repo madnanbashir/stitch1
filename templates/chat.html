@@ -16,6 +16,7 @@
     <% include 'includes/js/tab.html' %>
     <% include 'includes/js/browser-item.html' %>
     <% include 'includes/js/browser-item-user.html' %>
+    <% include 'includes/js/browser-room.html' %>
     <% include 'includes/js/browser-provider.html' %>
     <% include 'includes/js/upload.html' %>
 <% endblock %>
@@ -79,15 +80,19 @@
                     <i class="fa fa-bell-slash"></i>
                 </span>
             </div>
-            <ul class="lcb-tabs">
+            <ul class="lcb-tabs-header-wrapper">
                 <li data-id="list" class="lcb-tab lcb-tab-home">
                     <i class="fa fa-th"></i><span> Patients</span>
                 </li>
             </ul>
-            <a class="btn btn-success lcb-find-patients" data-toggle="modal" data-target="#lcb-find-patients" href="#!/find-patients">
-                <i class="fa fa-search"></i>
-                <span>Find Patients</span>
-            </a>
+            <div class="lcb-sidebar-patient-list-wrapper">
+                <ul class="lcb-tabs">
+                </ul>
+                <a class="btn btn-success lcb-find-patients" data-toggle="modal" data-target="#lcb-find-patients" href="#!/find-patients">
+                    <i class="fa fa-search"></i>
+                    <span>Find Patients</span>
+                </a>
+            </div>
         </section>
         <section class="lcb-panes">
 
@@ -120,9 +125,8 @@
                         <h4>Completely HIPAA-secure, patient-centric, and instantly searchable.</h4>
                         <h4>Continuously available where and when you need it.</h4>
                         <h5>1. Select or create a patient on the left panel.</h5>
-                        <h5>2. Invite other providers into the conversation on the right panel or by typing '@@'.</h5>
-                        <h5>3. Directly message providers on the right panel or by typing '@'</h5>
-                        <h5>4. Enjoy access to real-time conversations across multiple devices, easy file sharing, and search.</h5>
+                        <h5>2. Invite other providers into the conversation on the right panel or by typing ‘@‘</h5>
+                        <h5>3. Enjoy access to real-time conversations across multiple devices, easy file sharing, and search.</h5>
                     </section>
                 </div>
             </div>

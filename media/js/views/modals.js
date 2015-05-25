@@ -178,22 +178,17 @@
 
     window.LCB.FindPatientsView = window.LCB.ModalView.extend({
         events: {
-            'keyup .lcb-rooms-browser-filter-input': 'filter',
-            'change .lcb-rooms-switch': 'toggle',
-            'click .lcb-rooms-switch-label': 'toggle'
+            'keyup #lcb-rooms-browser-filter-input': 'filter',
+            'click .lcb-rooms-list-item-row': 'activateRoom'
         },
         initialize: function(options) {
             this.client = options.client;
-            this.template = Handlebars.compile($('#template-room-browser-item').html());
-            this.userTemplate = Handlebars.compile($('#template-room-browser-item-user').html());
+            this.template = Handlebars.compile($('#template-room-browser-row').html());
             this.rooms = options.rooms;
             this.rooms.on('add', this.add, this);
-            this.rooms.on('remove', this.remove, this);
-            this.rooms.on('change:description change:name', this.update, this);
+            this.rooms.on('remove', this.removeRoom, this);
+            this.rooms.on('change:name', this.update, this);
             this.rooms.on('change:lastActive', _.debounce(this.updateLastActive, 200), this);
-            this.rooms.on('change:joined', this.updateToggles, this);
-            this.rooms.on('users:add', this.addUser, this);
-            this.rooms.on('users:remove', this.removeUser, this);
             this.rooms.on('users:add users:remove add remove', this.sort, this);
             this.rooms.current.on('change:id', function(current, id) {
                 // We only care about the list pane
@@ -201,41 +196,37 @@
                 this.sort();
             }, this);
         },
-        updateToggles: function(room, joined) {
-            this.$('.lcb-rooms-switch[data-id=' + room.id + ']').prop('checked', joined);
-        },
-        toggle: function(e) {
+        activateRoom: function(e) {
             e.preventDefault();
-            var $target = $(e.currentTarget),
-                $input = $target.is(':checkbox') && $target || $target.siblings('[type="checkbox"]'),
-                id = $input.data('id'),
+            var $roomRow = $(e.currentTarget),
+                id = $roomRow.data('id'),
                 room = this.rooms.get(id);
             if (!room) {
                 return;
             }
-            (!$input.is(':checked') && this.client.joinRoom(room.id)) ||
-                (this.rooms.get(room.id).get('joined') && this.client.leaveRoom(room.id));
+            if(!this.rooms.get(room.id).get('joined')){
+                this.client.joinRoom(room.id);
+            }
         },
         add: function(room) {
             var room = room.toJSON ? room.toJSON() : room,
                 context = _.extend(room, {
-                    lastActive: moment(room.lastActive).calendar()
+                    lastActive: moment(room.lastActive).format('M/D/YYYY')
                 });
-            this.$('.lcb-rooms-list').append(this.template(context));
+            this.$('.lcb-rooms-list-modal tbody').append(this.template(context));
         },
-        remove: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + ']').remove();
+        removeRoom: function(room) {
+            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + ']').remove();
         },
         update: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-name').text(room.get('name'));
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-description').text(room.get('description'));
+            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-name-modal').text(room.get('name'));
         },
         updateLastActive: function(room) {
-            this.$('.lcb-rooms-list-item[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).calendar());
+            this.$('.lcb-rooms-list-item-row[data-id=' + room.id + '] .lcb-rooms-list-item-last-active .value').text(moment(room.get('lastActive')).format('M/D/YYYY'));
         },
         sort: function(model) {
             var that = this,
-                $items = this.$('.lcb-rooms-list-item');
+                $items = this.$('.lcb-rooms-list-item-row');
             // We only care about other users
             if (this.$el.hasClass('hide') && model && model.id === this.client.user.id)
                 return;
@@ -254,48 +245,59 @@
                 if (bj) return 1;
                 return 0;
             });
-            $items.detach().appendTo(this.$('.lcb-rooms-list'));
+            $items.detach().appendTo(this.$('.lcb-rooms-list-modal'));
         },
         filter: function(e) {
             e.preventDefault();
             var $input = $(e.currentTarget),
                 needle = $input.val().toLowerCase();
-            this.$('.lcb-rooms-list-item').each(function () {
-                var haystack = $(this).find('.lcb-rooms-list-item-name').text().toLowerCase();
-                $(this).toggle(haystack.indexOf(needle) >= 0);
+            this.$('.lcb-rooms-list-item-row').each(function () {
+                var name = $(this).find('.lcb-rooms-list-item-name-modal').text().toLowerCase();
+                var mrn = $(this).find('.lcb-rooms-list-item-name-mrn').text().toLowerCase();
+                $(this).toggle(name.indexOf(needle) >= 0 || mrn.indexOf(needle) >= 0 );
             });
         },
-        addUser: function(user, room) {
-            this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
-                .find('.lcb-rooms-list-users').prepend(this.userTemplate(user.toJSON()));
+        hide: function(){
+            this.$el.modal('hide');
         },
-        removeUser: function(user, room) {
-            this.$('.lcb-rooms-list-item[data-id="' + room.id + '"]')
-                .find('.lcb-rooms-list-user[data-id="' + user.id + '"]').remove();
-        }
+        show: function(){
+            this.$el.modal('show');
+        },
     });
 
     window.LCB.AddPatientView = window.LCB.ModalView.extend({
         initialize: function(options) {
-            this.client = options.client;
-            this.render();
+            var self = this;
+            self.client = options.client;
+            self.parentModal = options.parentModal;
+            self.render();
+
+            self.$el.on('show.bs.modal', function(){
+                self.parentModal.hide();
+            });
+            self.$el.on('hide.bs.modal', function(){
+                self.parentModal.show();
+            });
         },
         submit: function(e) {
+            var self = this;
             e.preventDefault();
-            var $modal = $('#lcb-add-room'),
-                $form = this.$(e.target),
-                $name = this.$('.lcb-room-name'),
-                $slug = this.$('.lcb-room-slug'),
+            var $modal = this.$el,
+                $form = self.$(e.target),
+                $name = self.$('.lcb-room-name'),
+                $slug = self.$('.lcb-room-slug'),
                 data = {
                     name: $name.val().trim(),
                     slug: $slug.val().trim(),
-                    description: this.$('.lcb-room-description').val(),
-                    callback: function success() {
-                        $modal.modal('hide');
-                        $('#lcb-find-patients').modal('hide');
-                        $form.trigger('reset');
+                    description: self.$('.lcb-room-description').val(),
+                    callback: function success(resp) {
+                        if(!resp.errors){
+                            $modal.off('hide.bs.modal'); //Avoid the parentModal display again
+                            $modal.modal('hide');
+                            $form.trigger('reset');
 
-                        swal('Patient Added!', 'The patient has been added.', 'success');
+                            swal('Patient Added!', 'The patient has been added.', 'success');
+                        }
                     }
                 };
 
@@ -316,7 +318,7 @@
 
     window.LCB.FindProvidersView = Backbone.View.extend({
         events: {
-            'keyup .lcb-providers-browser-filter-input': 'filter',
+            'keyup #lcb-providers-browser-filter-input': 'filter',
         },
         initialize: function(options) {
             var self = this;
@@ -326,28 +328,26 @@
                 self.client.getUsersSync();
             });
         },
-        // add: function(provider) {
-        //     var room = room.toJSON ? room.toJSON() : room,
-        //         context = _.extend(room, {
-        //             lastActive: moment(room.lastActive).calendar()
-        //         });
-        //     this.$('.lcb-rooms-list').append(this.template(context));
-        // },
-        /*        remove: function(room) {
-            this.$('.lcb-providers-list-item[data-id=' + room.id + ']').remove();
-        },
-        update: function(room) {
-            this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-name').text(room.get('name'));
-            this.$('.lcb-providers-list-item[data-id=' + room.id + '] .lcb-providers-list-item-description').text(room.get('description'));
-        },*/
         render: function () {
-          this.collection.each(this.add);
-          return this;
+            this.collection.each(this.add);
+            return this;
         },
-        addProvider: function (item) {
-          var providerView = new ProviderView ({ model: item , client : this.client, hideModal: _.bind(this.hide, this)}),
-              rendered = providerView.render().el;
-          this.$el.find("table>tbody").append(rendered);
+        addProvider: function (provider) {
+            var providerView = new ProviderView ({ model: provider , client : this.client, hideModal: _.bind(this.hide, this)}),
+                rendered = providerView.render().el;
+
+                //Item will be added to the list in order of name
+                var afterAll = true;
+                this.$el.find('.lcb-providers-list-item').each(function(){
+                    var name = $(this).find('.lcb-providers-list-item-name').text();
+                    if(afterAll && provider.get('displayName') < name){
+                        $(this).before(rendered);
+                        afterAll = false;
+                    }
+                })
+                if(afterAll){
+                     this.$el.find('table>tbody').append(rendered);
+                }
         },
         hide: function(){
             this.$el.modal('hide');
@@ -355,40 +355,21 @@
         show: function(){
             this.$el.modal('show');
         },
-        sort: function(model) {
-            var that = this,
-                $items = this.$('.lcb-providers-list-item');
-            // We only care about other users
-            if (this.$el.hasClass('hide') && model && model.id === this.client.user.id)
-                return;
-            $items.sort(function(a, b){
-                var ar = that.providers.get($(a).data('id')),
-                    br = that.providers.get($(b).data('id')),
-                    au = ar.users.length,
-                    bu = br.users.length,
-                    aj = ar.get('joined'),
-                    bj = br.get('joined')
-                if ((aj && bj) || (!aj && !bj)) {
-                    if (au > bu) return -1;
-                    if (au < bu) return 1;
-                }
-                if (aj) return -1;
-                if (bj) return 1;
-                return 0;
-            });
-            $items.detach().appendTo(this.$('.lcb-providers-list'));
-        },
         filter: function(e) {
             e.preventDefault();
             var $input = $(e.currentTarget),
                 needle = $input.val().toLowerCase();
+            //TODO:We might want to display message while no matched records
+            //but i think low priorty, could revisit after new UI mockup implemented
             this.$('.lcb-providers-list-item').each(function () {
                 var haystack = $(this).find('.lcb-providers-list-item-name').text().toLowerCase();
                 $(this).toggle(haystack.indexOf(needle) >= 0);
             });
         },
     });
-
+    /**
+     * A private view only used for each provider record in provider list, no need to expose it to public
+     */
     var ProviderView = Backbone.View.extend({
         tagName:"tr",
         className : 'lcb-providers-list-item',
@@ -396,6 +377,7 @@
             this.client = options.client;
             this._tmplRender = Handlebars.compile($('#template-provider-browser-item').html());
             this.hideModal = options.hideModal;
+            this.listenTo(this.model, 'change:name', this.updateProvider);
         },
         events: {
             "click td": "sendInvite",
@@ -404,6 +386,11 @@
             var innerHTML = this._tmplRender({user:this.model.toJSON()});
             this.el.innerHTML = innerHTML;
             return this;
+        },
+        //TODO, Not sure whether proivder profile update will be broadcast real time
+        //Implement and test this after the profile update function back to normal
+        updateProvider:function(provider){
+            console.log(provider);
         },
         sendInvite: function () {
             var username = this.model.get('username')
@@ -414,10 +401,8 @@
 
             var currentContent = ($activedMessageBox.val() === '' ? '' : $activedMessageBox.val() + ' ');
             $activedMessageBox.val(currentContent +'@' + username + ' ');
-            // TODO double check whether we need foucs
-            // at least in chrome, focus works,and you can type text diretly even the modal
-            // window is on the top, but a little bit wired
-            // $activedMessageBox.focus();
+
+            $activedMessageBox.focus();
             this.client.inviteToRoom(username, roomId);
         }
 

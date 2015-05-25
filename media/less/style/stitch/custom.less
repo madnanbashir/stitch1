@@ -9,7 +9,7 @@ body, html {
 
 .lcb-sidebar {
 	background: @dark_blue;
-	padding: 10px 0 0 15px;
+	padding: 10px 0 150px 15px;
 	width: 230px;
 
 	@media (max-width: @phone-size) {
@@ -243,3 +243,68 @@ body, html {
     font-size: 0.9em;
 }
 
+
+
+
+.modal.lcb-scrollable-modal{
+    height: 100%;
+    .modal-dialog{
+        height: 80%;
+    }
+    .modal-content{
+        height: 100%;
+        padding-bottom: 57px;
+    }
+
+    //Don't add parent class(e.g. modal-dialog, .modal-content) to support overwritten in other sytle file, e.g wizard-layout
+    .modal-body{
+        height: 100%;
+        padding-bottom: 42px;
+    }
+}
+
+table.table-hover{
+    cursor: pointer;
+}
+
+.lcb-fixed-header-table{
+  position: relative;
+  // border: 1px solid green;
+  padding-top: 37px;
+  height: 100%;
+  >div{
+    overflow-y: auto;
+    height: 100%;
+  }
+  table{
+    border: none;
+    th {
+      height: 0;
+      line-height: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      color: transparent;
+      border: none;
+      white-space: nowrap;
+      div{
+        display: block;
+        position: absolute;
+        background: transparent;
+        color: #000;
+        padding: 9px 8px;
+        top: 0;
+        margin-left: -9px;
+        line-height: normal;
+      }
+    }
+  }
+}
+//mimic the style of lcb-tabs
+.lcb-tabs-header-wrapper{
+    padding: 0px;
+    margin: 0px;
+}
+.lcb-sidebar-patient-list-wrapper{
+    height:100%;
+    overflow-y:auto;
+}

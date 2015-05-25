@@ -46,6 +46,9 @@ module.exports = function() {
 
                     var token = buffer.toString('hex');
 
+                    //Pefill organizationDomain, we can extract it from email
+                    var organizationDomain = req.body.receiverEmail ? req.body.receiverEmail.replace(/.*@/,'') : req.body.receiverEmail;
+
                     core.account.create('local', {
                         email: req.body.receiverEmail,
                         verificationToken: token,
@@ -59,7 +62,7 @@ module.exports = function() {
                         displayName: 'displayName' + token,
                         position: 'position' + token,
                         organizationName: 'organizationName' + token,
-                        organizationDomain: 'organizationDomain' + token,
+                        organizationDomain: organizationDomain,
                         inviterId: req.user._id,
                         invitationMessage: req.body.invitationMessage,
                         invitationRoomId: req.body.invitationRoomId
