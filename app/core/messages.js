@@ -147,6 +147,10 @@ MessageManager.prototype.emailNotifyOfflineUsers = function(room, message, sende
                         content: sender.displayName
                     },
                     {
+                        name: 'receiverFirstName',
+                        content: offlineUser.firstName
+                    },
+                    {
                         name: 'receiverName',
                         content: offlineUser.displayName
                     },
