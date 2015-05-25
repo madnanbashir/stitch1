@@ -99,20 +99,6 @@ app.use(helmet.contentSecurityPolicy({
     imgSrc: ['*']
 }));
 
-var bundles = {};
-app.use(require('connect-assets')({
-    paths: [
-        'media/js',
-        'media/less',
-        // 'media/img',
-        // 'media/font',
-    ],
-    helperContext: bundles,
-    build: settings.env === 'production',
-    fingerprinting: settings.env === 'production',
-    servePath: 'media/dist'
-}));
-
 // Public
 app.use('/media', express.static(__dirname + '/media', {
     maxAge: '364d',
@@ -132,18 +118,22 @@ var nun = nunjucks.configure('templates', {
         }
     });
 
-function wrapBundler(func) {
-    // This method ensures all assets paths start with "./"
-    // Making them relative, and not absolute
-    return function() {
-        return func.apply(func, arguments)
-                   .replace(/href="\//g, 'href="./')
-                   .replace(/src="\//g, 'src="./');
-    };
+// keep it for backward compability
+function wrapBundler(kind) {
+  return function(name) {
+    name = name + '.' + kind;
+
+    if (kind === 'js') {
+      return '<script src="/media/dist/' + name + '"></script>';
+    } else if (kind === 'css') {
+      return '<link rel="stylesheet" href="/media/dist/' + name + '" />';
+    }
+  };
 }
 
-nun.addFilter('js', wrapBundler(bundles.js));
-nun.addFilter('css', wrapBundler(bundles.css));
+nun.addFilter('js', wrapBundler('js'));
+nun.addFilter('css', wrapBundler('css'));
+
 nun.addGlobal('text_search', false);
 
 // HTTP Middlewares

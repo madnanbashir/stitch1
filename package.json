@@ -91,6 +91,9 @@
     "grunt": "~0.4.5",
     "grunt-bower": "~0.16.0",
     "grunt-bower-task": "~0.4.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mincer": "^1.0.0",
+    "mincer": "^1.2.4",
     "socket.io-client": "~1.3.2"
   }
 }

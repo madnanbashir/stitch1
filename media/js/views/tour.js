@@ -1,4 +1,4 @@
-/* global Backbone, _, Tour */
+/* global Backbone, _, Tour, Handlebars */
 /*
  * TOUR VIEW
  */
@@ -10,6 +10,8 @@
 
     window.LCB.TourView = Backbone.View.extend({
         initialize: function() {
+            var templateWelcome = Handlebars.compile($('#template-tour-welcome').html());
+
             this.tour = new Tour({
                 delay: false,
                 steps: [
@@ -17,7 +19,14 @@
                         title: 'Welcome to 1',
                         content: 'Content 1',
                         container: '.lcb-pane',
-                        orphan: true
+                        orphan: true,
+                        template: function(i, step) {
+                            console.log(i);
+                            console.log(step);
+                            console.log('TEMPLATE!!!!!');
+                            var val = templateWelcome();
+                            return val;
+                        }
                     },
                     {
                         title: 'Welcome to 2',
@@ -33,8 +42,8 @@
                     },
                 ]
             });
-            // this.tour.init();
-            // this.tour.start();
+            this.tour.init();
+            this.tour.start();
         }
     });
 })(window, $, _);
