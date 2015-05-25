@@ -3,7 +3,7 @@
 var _ = require('lodash'),
     mongoose = require('mongoose'),
     helpers = require('./helpers'),
-    mailService = require('../emails/mailService'),
+    mandrillService = require('../emails/mandrillService'),
     thisHost = 'localhost:5000';
 
 function MessageManager(options) {
@@ -128,15 +128,36 @@ MessageManager.prototype.emailNotifyOfflineUsers = function(room, message, sende
         }
 
         offlineUsers.forEach(function (offlineUser) {
-            var mailConfig = {
+            var templateName = 'message-waiting-offline-email';
+
+            var message = {
                 subject: sender.displayName + ' has sent you a direct message on Stitch',
-                receiver: offlineUser,
-                loginUrl: 'http://' + thisHost + '/login',
-                senderName: sender.displayName,
-                message: message.text
+                to: [{
+                    email: offlineUser.email
+                }],
+                merge: true,
+                merge_language: 'mailchimp',
+                global_merge_vars: [
+                    {
+                        name: 'loginUrl',
+                        content: 'http://' + thisHost + '/login'
+                    },
+                    {
+                        name: 'senderName',
+                        content: sender.displayName
+                    },
+                    {
+                        name: 'receiverName',
+                        content: offlineUser.displayName
+                    },
+                    {
+                        name: 'receiverEmail',
+                        content: offlineUser.email
+                    }
+                ]
             };
 
-            mailService.sendEmail('offline-email', mailConfig);
+            mandrillService.sendEmail(templateName, [], message, function(){});
         });
 
         cb(null);

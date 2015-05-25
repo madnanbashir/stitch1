@@ -43,7 +43,10 @@ module.exports = function() {
                 maxTake: 5000
             });
 
-            var find = User.find({organizationDomain: req.user.organizationDomain, isVerified : true});
+            var find = User.find({
+                organizationDomain: req.user.organizationDomain,
+                isVerified: true
+            });
 
             if (options.skip) {
                 find.skip(options.skip);

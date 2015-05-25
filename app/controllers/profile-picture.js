@@ -24,7 +24,6 @@ var fileUpload = multer({
 });
 
 mkdirp.mkdirp(path.resolve(__dirname, '../../media/photo-uploads'));
-mkdirp.mkdirp(path.resolve(__dirname, '../../media/photo-uploads/cropped'));
 
 module.exports = function() {
 

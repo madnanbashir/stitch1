@@ -413,6 +413,7 @@
             this.client = options.client;
             this.parentModal = options.parentModal;
             this.$el.on('show.bs.modal', function(){
+                $('#lcb-invite-new-provider-email-label').text('Email address (@' + self.client.user.get('organizationDomain') + '):');
                 self.parentModal.hide();
             });
             this.$el.on('hide.bs.modal', function(){
@@ -420,20 +421,37 @@
             });
         },
         events: {
-            "click #lcb-invite-new-provider-confirm": "inviteNewProvider",
+            "click #lcb-invite-new-provider-confirm": "inviteNewProvider"
         },
         inviteNewProvider: function () {
+            var self = this;
+            var invitedEmail = $('#lcb-invite-new-provider-email').val();
+            var myDomain = this.client.user.get('organizationDomain');
+            var invitedDomain = invitedEmail.substr((invitedEmail.indexOf("@") + 1));
+
+            if(myDomain !== invitedDomain){
+                return swal("Oops...", 'Please enter a colleague’s email address ending in @' + myDomain, "error");
+            }
+
             $.ajax({
                 type: "POST",
                 url: "/mail/inviteProvider",
                 data: {
-                    'receiverEmail': $('#lcb-invite-new-provider-email').val(),
-                    'message': $('#lcb-invite-new-provider-message').val(),
+                    'receiverEmail': invitedEmail,
                     'inviterName': this.client.user.get('displayName'),
-                    'inviterOrg': this.client.user.get('organizationName')
+                    'inviterOrg': this.client.user.get('organizationName'),
+                    'invitationMessage': $('#lcb-invite-new-provider-message').val(),
+                    'invitationRoomId': this.client.rooms.current.get('id')
                 },
                 success: function(res){
-                    //console.log('invitation mail sent');
+                    if(res.error){
+                        swal("Oops...", res.error.message, "error");
+                    } else {
+                        swal("Success!", "An invitation email was sent to your colleague!", "success");
+                    }
+                    $('#lcb-invite-new-provider-email').val('');
+                    $('#lcb-invite-new-provider-message').val('');
+                    self.$el.modal('hide');
                 }
             });
         }

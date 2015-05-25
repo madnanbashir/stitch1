@@ -117,6 +117,18 @@ var UserSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    inviterId: {
+        type: ObjectId,
+        ref: 'User'
+    },
+    invitationMessage: {
+        type: String,
+        trim: true
+    },
+    invitationRoomId: {
+        type: ObjectId,
+        ref: 'Room'
+    },
     rooms: [{
 		type: ObjectId,
 		ref: 'Room'
@@ -301,7 +313,8 @@ UserSchema.method('toJSON', function() {
         username: this.username,
         displayName: this.displayName,
         position: this.position,
-        organizationName: this.organizationName
+        organizationName: this.organizationName,
+        organizationDomain: this.organizationDomain
     };
 });
 
