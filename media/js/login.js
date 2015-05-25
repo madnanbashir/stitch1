@@ -25,7 +25,8 @@
                     });
                     if ($form.data('refresh')) {
                         setTimeout(function() {
-                            window.location = './';
+                            // window.location = './';
+                            window.location.href = window.location.href.replace(/login/,'');
                         }, 1000);
                         return;
                     }
