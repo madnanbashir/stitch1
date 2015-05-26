@@ -140,7 +140,7 @@ MessageManager.prototype.emailNotifyOfflineUsers = function(room, message, sende
                 global_merge_vars: [
                     {
                         name: 'loginUrl',
-                        content: 'http://' + thisHost + '/login'
+                        content: 'http://' + thisHost + '/#!/room/' + room._id
                     },
                     {
                         name: 'senderName',
