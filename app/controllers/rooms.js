@@ -88,7 +88,8 @@ module.exports = function() {
             var options = {
                     skip: req.param('skip'),
                     take: req.param('take'),
-                    organizationDomain: req.user.organizationDomain
+                    organizationDomain: req.user.organizationDomain,
+                    withUsers: req.param('users')
                 };
 
             core.rooms.list(options, function(err, rooms) {
@@ -100,7 +101,6 @@ module.exports = function() {
                 if (req.param('users')) {
                     rooms = _.map(rooms, function(room) {
                         room = room.toJSON();
-                        room.users = core.presence.getUsersForRoom(room.id.toString());
                         room.userCount = room.users.length;
                         return room;
                     });

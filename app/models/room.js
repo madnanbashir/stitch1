@@ -75,7 +75,8 @@ RoomSchema.method('toJSON', function() {
         description: room.description,
         lastActive: room.lastActive,
         created: room.created,
-        owner: room.owner
+        owner: room.owner,
+        users: room.users || []
     };
  });
 

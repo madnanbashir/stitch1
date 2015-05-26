@@ -110,6 +110,10 @@ RoomManager.prototype.list = function(options, cb) {
         find.sort(sort);
     }
 
+    if (options.withUsers) {
+        find.populate('users');
+    }
+
     find.exec(cb);
 };
 
