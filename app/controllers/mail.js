@@ -73,7 +73,7 @@ module.exports = function() {
                             return res.sendStatus(504);
                         }
 
-                        var templateName = 'sign-up-4-you-re-invited-message-waiting';
+                        var templateName = 'sign-up-4-you-are-invited-message-waiting';
 
                         var message = {
                             subject: req.body.inviterName + ' has invited you to join ' + req.body.inviterOrg + ' on Stitch',
