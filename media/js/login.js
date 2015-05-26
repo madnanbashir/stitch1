@@ -88,5 +88,24 @@
                 submitHandler: onSubmit
             });
         });
+
+        $('#lcb-login-position-options').on('change', function() {
+            var $oTextbox = $('#lcb-login-position-other');
+            if ($oTextbox) {
+                if($(this).val() === 'Other'){
+                    $(this).parent().removeClass('col-sm-18').addClass('col-sm-9');
+                    $oTextbox.parent().removeClass('hide')
+                    $oTextbox.focus();
+                    $('input[name=position]').val('');
+                }else{
+                    $(this).parent().removeClass('col-sm-9').addClass('col-sm-18');
+                    $oTextbox.parent().addClass('hide')
+                    $('input[name=position]').val($(this).val());
+                }
+            }
+        })
+        $('#lcb-login-position-other').on('change', function() {
+            $('input[name=position]').val($(this).val());
+        })
     });
 }();
