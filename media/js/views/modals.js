@@ -439,6 +439,7 @@
                 data: {
                     'receiverEmail': invitedEmail,
                     'inviterName': this.client.user.get('displayName'),
+                    'inviterFirstName': this.client.user.get('firstName'),
                     'inviterOrg': this.client.user.get('organizationName'),
                     'invitationMessage': $('#lcb-invite-new-provider-message').val(),
                     'invitationRoomId': this.client.rooms.current.get('id')
