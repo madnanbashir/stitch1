@@ -41,7 +41,7 @@
                 <!-- Now being auto-generated. Will leave in in case we want to give users this option.
                 <div class="form-group">
                     <input class="required form-control" name="display-name" type="text" placeholder="Display Name" maxlength="24" />
-                </div> 
+                </div>
                 -->
                 <div class="row">
                     <div class="form-group col-sm-9">
@@ -58,8 +58,10 @@
                     <input class="required form-control" name="organization" type="text" placeholder="Organization" />
                     <% endif %>
                 </div>
-                <div class="form-group">
-                        <select class="required form-control" name="position">
+                <div class="row">
+                    <div class="form-group col-sm-18" >
+                        <input name="position" type="hidden" value=""/>
+                        <select class="required form-control" id="lcb-login-position-options">
                           <option value="" selected disabled>Degree</option>
                           <optgroup label="Doctor">
                             <option value="PGY1">PGY1</option>
@@ -94,8 +96,12 @@
                             <option value="Front Desk">Front Desk</option>
                             <option value="Referrals">Referrals</option>
                           </optgroup>
-                          <option value>
+                          <option value="Other">Other..</option>
                         </select>
+                    </div>
+                    <div class="form-group col-sm-9 hide">
+                       <input type="text" class="form-control" id="lcb-login-position-other" value=""/>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-9">
